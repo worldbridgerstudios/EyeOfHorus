@@ -95,26 +95,26 @@ class TestHourglassStructure:
     
     def test_hourglass_get_meaning_masculine(self):
         """get_meaning works for masculine mode."""
-        hg = get_hourglass('r')  # Ra - ILLUMINE
-        assert hg.get_meaning(Mode.MASCULINE, Pole.MINIMA) == 'OBSCURE'
-        assert hg.get_meaning(Mode.MASCULINE, Pole.EQUILIBRIUM) == 'ILLUMINE'
-        assert hg.get_meaning(Mode.MASCULINE, Pole.MAXIMA) == 'BLIND'
+        hg = get_hourglass('r')  # Ra - SHINE
+        assert hg.get_meaning(Mode.MASCULINE, Pole.MINIMA) == 'DIM'
+        assert hg.get_meaning(Mode.MASCULINE, Pole.EQUILIBRIUM) == 'SHINE'
+        assert hg.get_meaning(Mode.MASCULINE, Pole.MAXIMA) == 'BLAZE'
     
     def test_hourglass_get_meaning_feminine(self):
         """get_meaning works for feminine mode."""
         hg = get_hourglass('r')  # Ra
-        assert hg.get_meaning(Mode.FEMININE, Pole.MINIMA) == 'CONCEAL'
-        assert hg.get_meaning(Mode.FEMININE, Pole.EQUILIBRIUM) == 'REVEAL'
-        assert hg.get_meaning(Mode.FEMININE, Pole.MAXIMA) == 'EXPOSE'
+        assert hg.get_meaning(Mode.FEMININE, Pole.MINIMA) == 'SHADE'
+        assert hg.get_meaning(Mode.FEMININE, Pole.EQUILIBRIUM) == 'BASK'
+        assert hg.get_meaning(Mode.FEMININE, Pole.MAXIMA) == 'ABSORB'
     
     def test_core_verb_is_masculine_equilibrium(self):
         """core_verb property returns masculine equilibrium."""
         test_cases = {
-            'a': 'SOURCE',
-            'm': 'WEIGH',
-            'n': 'WEAVE',
-            'r': 'ILLUMINE',
-            't': 'MEASURE',
+            'a': 'HONOUR',
+            'm': 'TRUE',
+            'n': 'INTEGRATE',
+            'r': 'SHINE',
+            't': 'READ',
             'd': 'DO',
         }
         for phoneme, expected in test_cases.items():
@@ -137,63 +137,69 @@ class TestDeityAssociations:
     """Tests for deity associations."""
     
     def test_key_deity_mappings(self):
-        """Core phoneme-deity associations are correct."""
+        """Core phoneme-deity associations are correct (v62)."""
         associations = {
-            'a': 'Atum',
+            'a': 'Anubis',
             'n': 'Neith',
             'm': "Ma'at",
             'r': 'Ra',
-            'h': 'Horus',
+            'H': 'Horus',
             'g': 'Geb',
             'sh': 'Shu',
-            't': 'Thoth',
+            't': 'Seshat',
             'p': 'Ptah',
             'kh': 'Khnum',
             'w': 'Wadjet',
+            's': 'Sekhmet',
+            'A': 'Atum',
+            'y': 'Isis',
+            'b': 'Taweret',
+            'i': 'Ihy',
+            'dj': 'Thoth',
         }
         for phoneme, deity in associations.items():
             hg = get_hourglass(phoneme)
             assert hg.deity == deity, f"Phoneme {phoneme} should map to {deity}"
 
 
-class TestMaatWeigh:
-    """Specific tests for M = Ma'at = WEIGH."""
+class TestMaatTrue:
+    """Specific tests for M = Ma'at = TRUE."""
     
     def test_m_masculine_poles(self):
-        """M masculine: DIMINISH - WEIGH - AMPLIFY."""
+        """M masculine: FALSIFY - TRUE - VERIFY."""
         hg = get_hourglass('m')
-        assert hg.min_masc == 'DIMINISH'
-        assert hg.equilibrium_masc == 'WEIGH'
-        assert hg.max_masc == 'AMPLIFY'
+        assert hg.min_masc == 'FALSIFY'
+        assert hg.equilibrium_masc == 'TRUE'
+        assert hg.max_masc == 'VERIFY'
     
     def test_m_feminine_poles(self):
-        """M feminine: TENDERNESS - COMPASSION - FORGIVENESS."""
+        """M feminine: DOUBT - TRUST - BELIEVE."""
         hg = get_hourglass('m')
-        assert hg.min_fem == 'TENDERNESS'
-        assert hg.equilibrium_fem == 'COMPASSION'
-        assert hg.max_fem == 'FORGIVENESS'
+        assert hg.min_fem == 'DOUBT'
+        assert hg.equilibrium_fem == 'TRUST'
+        assert hg.max_fem == 'BELIEVE'
 
 
 class TestNeithEquilibrium:
-    """Specific tests for N = Neith = WEAVE (equilibrium itself)."""
+    """Specific tests for N = Neith = INTEGRATE (equilibrium itself)."""
     
-    def test_n_is_weave(self):
-        """N's core verb is WEAVE."""
-        assert get_core_verb('n') == 'WEAVE'
+    def test_n_is_integrate(self):
+        """N's core verb is INTEGRATE."""
+        assert get_core_verb('n') == 'INTEGRATE'
     
     def test_n_masculine_poles(self):
-        """N masculine: SEVER - WEAVE - FUSE."""
+        """N masculine: FRAGMENT - INTEGRATE - FUSE."""
         hg = get_hourglass('n')
-        assert hg.min_masc == 'SEVER'
-        assert hg.equilibrium_masc == 'WEAVE'
+        assert hg.min_masc == 'FRAGMENT'
+        assert hg.equilibrium_masc == 'INTEGRATE'
         assert hg.max_masc == 'FUSE'
     
     def test_n_feminine_poles(self):
-        """N feminine: ISOLATE - CONNECT - MERGE."""
+        """N feminine: UNRAVEL - WEAVE - INTERLOCK."""
         hg = get_hourglass('n')
-        assert hg.min_fem == 'ISOLATE'
-        assert hg.equilibrium_fem == 'CONNECT'
-        assert hg.max_fem == 'MERGE'
+        assert hg.min_fem == 'UNRAVEL'
+        assert hg.equilibrium_fem == 'WEAVE'
+        assert hg.max_fem == 'INTERLOCK'
 
 
 class TestRelations:
@@ -223,10 +229,10 @@ class TestRelations:
     def test_relation_object_verbs(self):
         """Relation objects correctly produce verbs."""
         rel = Relation('r', 'n')
-        assert rel.verb_a == 'ILLUMINE'
-        assert rel.verb_b == 'WEAVE'
-        assert rel.forward == 'ILLUMINE→WEAVE'
-        assert rel.reverse == 'WEAVE→ILLUMINE'
+        assert rel.verb_a == 'SHINE'
+        assert rel.verb_b == 'INTEGRATE'
+        assert rel.forward == 'SHINE→INTEGRATE'
+        assert rel.reverse == 'INTEGRATE→SHINE'
 
 
 class TestTotalGrammar:
@@ -311,44 +317,44 @@ class TestDecoding:
         """Decode in masculine mode returns masculine verbs."""
         phonemes = ['a', 'b', 'r']
         verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.EQUILIBRIUM)
-        assert verbs == ['SOURCE', 'BIRTH', 'ILLUMINE']
+        assert verbs == ['HONOUR', 'HARVEST', 'SHINE']
     
     def test_decode_with_mode_feminine(self):
         """Decode in feminine mode returns feminine verbs."""
         phonemes = ['a', 'b', 'r']
         verbs = decode_with_mode(phonemes, Mode.FEMININE, Pole.EQUILIBRIUM)
-        assert verbs == ['RECEPTIVE', 'BEAR', 'REVEAL']
+        assert verbs == ['ALLOW', 'CULTIVATE', 'BASK']
     
     def test_decode_trajectory(self):
         """decode_trajectory returns arrow-joined string."""
         phonemes = ['a', 'b', 'r']
         traj = decode_trajectory(phonemes, Mode.MASCULINE)
-        assert traj == 'SOURCE → BIRTH → ILLUMINE'
+        assert traj == 'HONOUR → HARVEST → SHINE'
     
     def test_phonemes_to_verbs_backward_compat(self):
         """phonemes_to_verbs maintains backward compatibility."""
         phonemes = ['a', 'b', 'r', 'k', 'd']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['SOURCE', 'BIRTH', 'ILLUMINE', 'CYCLE', 'DO']
+        assert verbs == ['HONOUR', 'HARVEST', 'SHINE', 'CYCLE', 'DO']
     
     def test_abracadabra(self):
         """ABRACADABRA decodes correctly."""
         # Ah-Ba-Ra-Ka-Da-Ba-Ra → A B R K D B R
         phonemes = ['a', 'b', 'r', 'k', 'd', 'b', 'r']
         verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.EQUILIBRIUM)
-        assert verbs == ['SOURCE', 'BIRTH', 'ILLUMINE', 'CYCLE', 'DO', 'BIRTH', 'ILLUMINE']
+        assert verbs == ['HONOUR', 'HARVEST', 'SHINE', 'CYCLE', 'DO', 'HARVEST', 'SHINE']
     
     def test_maat_decode(self):
-        """MA'AT decodes as WEIGH-SOURCE-MEASURE."""
+        """MA'AT decodes as TRUE-HONOUR-READ."""
         phonemes = ['m', 'a', 't']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['WEIGH', 'SOURCE', 'MEASURE']
+        assert verbs == ['TRUE', 'HONOUR', 'READ']
     
     def test_unknown_phoneme_in_sequence(self):
         """Unknown phonemes marked with ?."""
         phonemes = ['a', 'xyz', 'r']
         verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.EQUILIBRIUM)
-        assert verbs == ['SOURCE', '?xyz', 'ILLUMINE']
+        assert verbs == ['HONOUR', '?xyz', 'SHINE']
 
 
 class TestEdgeCases:
@@ -362,8 +368,8 @@ class TestEdgeCases:
     
     def test_single_phoneme(self):
         """Single phoneme decodes correctly."""
-        assert decode_with_mode(['r'], Mode.MASCULINE, Pole.EQUILIBRIUM) == ['ILLUMINE']
-        assert decode_trajectory(['r'], Mode.MASCULINE) == 'ILLUMINE'
+        assert decode_with_mode(['r'], Mode.MASCULINE, Pole.EQUILIBRIUM) == ['SHINE']
+        assert decode_trajectory(['r'], Mode.MASCULINE) == 'SHINE'
     
     def test_all_phonemes_decode(self):
         """All 16 phonemes decode without error."""

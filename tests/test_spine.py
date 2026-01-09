@@ -125,8 +125,8 @@ class TestTriangularRelation:
     def test_triangular_relation_verbs(self):
         """TriangularRelation verbs from wheel phonemes."""
         rel = TriangularRelation('r', 'n', Scale.ONTOGENIC)
-        assert rel.verb_a == 'ILLUMINE'
-        assert rel.verb_b == 'WEAVE'
+        assert rel.verb_a == 'SHINE'
+        assert rel.verb_b == 'INTEGRATE'
     
     def test_self_relation(self):
         """Self-relations detected correctly."""
@@ -139,12 +139,12 @@ class TestTriangularRelation:
     def test_description(self):
         """Description is human-readable."""
         rel = TriangularRelation('r', 'n', Scale.ONTOGENIC)
-        assert 'ILLUMINE' in rel.description
-        assert 'WEAVE' in rel.description
+        assert 'SHINE' in rel.description
+        assert 'INTEGRATE' in rel.description
         assert 'ontogenic' in rel.description
         
         self_rel = TriangularRelation('r', 'r', Scale.COSMOGENIC)
-        assert 'ILLUMINE' in self_rel.description
+        assert 'SHINE' in self_rel.description
         assert 'cosmogenic' in self_rel.description
 
 

@@ -127,17 +127,17 @@ class TestLine1Specifics:
         assert len(lines[0].phonemes) == 24
     
     def test_line1_ends_illumine_illumine_open(self):
-        """Line 1 forward ends with ILLUMINE → ILLUMINE → OPEN (ꞽr rʾ)."""
+        """Line 1 forward ends with SHINE → SHINE → LEAD (ꞽr rʾ)."""
         lines, _, _ = decode_bidirectional(1, 1, verbose=False)
         verbs = lines[0].forward_verbs
         # Two r's (eye + mouth) followed by aleph
-        assert verbs[-3:] == ['ILLUMINE', 'ILLUMINE', 'OPEN']
+        assert verbs[-3:] == ['SHINE', 'SHINE', 'LEAD']
     
     def test_line1_reverse_starts_open_illumine_illumine(self):
-        """Line 1 reverse starts with OPEN → ILLUMINE → ILLUMINE."""
+        """Line 1 reverse starts with LEAD → SHINE → SHINE."""
         lines, _, _ = decode_bidirectional(1, 1, verbose=False)
         verbs = lines[0].reverse_verbs
-        assert verbs[:3] == ['OPEN', 'ILLUMINE', 'ILLUMINE']
+        assert verbs[:3] == ['LEAD', 'SHINE', 'SHINE']
 
 
 class TestLine8Specifics:
@@ -148,8 +148,8 @@ class TestLine8Specifics:
         lines, _, _ = decode_bidirectional(8, 8, verbose=False)
         verbs = lines[0].forward_verbs
         # Line 8: rḏ.t qbḥ(.w) → r, dj, t, k, b, H
-        # dj → JUDGE, k → CYCLE (spine)
-        assert 'JUDGE' in verbs  # dj phoneme (wheel)
+        # dj → DISCERN, k → CYCLE (spine)
+        assert 'DISCERN' in verbs  # dj phoneme (wheel)
         assert 'CYCLE' in verbs  # k phoneme (spine)
 
 
@@ -160,9 +160,9 @@ class TestParagraphBuilding:
         """Paragraphs contain verb content."""
         _, forward, reverse = decode_bidirectional(1, 3, verbose=False)
         
-        # Should contain lowercased verbs
-        assert 'source' in forward.lower() or 'bind' in forward.lower()
-        assert 'source' in reverse.lower() or 'illumine' in reverse.lower()
+        # Should contain lowercased verbs (v62)
+        assert 'shine' in forward.lower() or 'emerge' in forward.lower()
+        assert 'shine' in reverse.lower() or 'integrate' in reverse.lower()
     
     def test_paragraphs_different(self):
         """Forward and reverse paragraphs are different."""

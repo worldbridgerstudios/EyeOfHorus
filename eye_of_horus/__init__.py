@@ -98,3 +98,46 @@ from .rhythm import (
     analyze_line_rhythm,
     SCRIPT_RATIOS,
 )
+
+# Bitwise engine (fast vectorized decode)
+from .bitwise import (
+    # IDs
+    PHONEME_TO_ID,
+    ID_TO_PHONEME,
+    NUM_PHONEMES,
+    NUM_WHEEL,
+    NUM_SPINE,
+    # Position encoding
+    Pos,
+    Layer,
+    LAYER_POS,
+    # Tables
+    VERB_TABLE,
+    CORE_VERB_TABLE,
+    # Encoding
+    encode_phonemes,
+    decode_ids,
+    semantic_address,
+    address_to_components,
+    # Classification (bitwise)
+    is_wheel as is_wheel_fast,
+    is_spine as is_spine_fast,
+    is_wheel_array,
+    is_spine_array,
+    # Layered decode
+    decode_layer,
+    decode_all_layers,
+    decode_layered as decode_layered_fast,
+    LayeredResult,
+    decode_text,
+    # Relations
+    relation_index,
+    relation_to_pair,
+    NUM_WHEEL_RELATIONS,
+    # Grammar
+    grammar_index,
+    grammar_to_components,
+    TOTAL_GRAMMAR,
+    # Convenience
+    phonemes_to_verbs_fast,
+)

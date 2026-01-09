@@ -60,6 +60,14 @@ These documents record the progressive discoveries made during the development o
 
 ---
 
+### Performance: Bitwise Engine
+
+| # | Document | Summary |
+|---|----------|---------|
+| 13 | [Bitwise Engine](13-bitwise-engine.md) | 8-bit semantic addresses, vectorized decode, 25× speedup over dict lookups. |
+
+---
+
 ## Key Formulas
 
 ```

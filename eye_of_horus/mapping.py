@@ -5,25 +5,25 @@ The wheel has 16 positions, each a fundamental phonemic verb.
 This module handles transliteration conversion; see engine.py for
 the complete hourglass semantics (5 positions per phoneme).
 
-Wheel Order (from HoloCell paper):
-| Pos | Phoneme | Leiden | Verb       |
-|-----|---------|--------|------------|
-|  1  | n       | n      | WEAVE      |
-|  2  | w       | w      | PROTECT    |
-|  3  | s       | s,z    | BIND       |
-|  4  | sh      | š      | LIFT       |
-|  5  | A       | ꜣ      | OPEN       |
-|  6  | t       | t,ṯ    | MEASURE    |
-|  7  | H       | ḥ      | PIERCE     |
-|  8  | r       | r      | ILLUMINE   |
-|  9  | m       | m      | WEIGH      |
-| 10  | a       | ꜥ      | SOURCE     |
-| 11  | y       | y      | YEARN      |
-| 12  | b       | b      | BIRTH      |
-| 13  | p       | p      | FORM       |
-| 14  | i       | ꞽ,i    | POINT      |
-| 15  | kh      | ḫ,ẖ    | MOLD       |
-| 16  | dj      | ḏ      | JUDGE      |
+Wheel Lexicon v62 (January 2026):
+| Pos | Ph  | Deity    | F eq      | M eq      |
+|-----|-----|----------|-----------|-----------|
+|  1  | n   | Neith    | WEAVE     | INTEGRATE |
+|  2  | w   | Wadjet   | FLOW      | CHARGE    |
+|  3  | s   | Sekhmet  | COCOON    | EMERGE    |
+|  4  | sh  | Shu      | ALIGN     | DIRECT    |
+|  5  | A   | Atum     | TEND      | LEAD      |
+|  6  | t   | Seshat   | ETCH      | READ      |
+|  7  | H   | Horus    | INTERPRET | EXPRESS   |
+|  8  | r   | Ra       | BASK      | SHINE     |
+|  9  | m   | Ma'at    | TRUST     | TRUE      |
+| 10  | a   | Anubis   | ALLOW     | HONOUR    |
+| 11  | y   | Isis     | RESTORE   | DEVOTE    |
+| 12  | b   | Taweret  | CULTIVATE | HARVEST   |
+| 13  | p   | Ptah     | GATHER    | STORE     |
+| 14  | i   | Ihy      | PROTECT   | BESTOW    |
+| 15  | kh  | Khnum    | CAPACITY  | EMBODY    |
+| 16  | dj  | Thoth    | ACT       | DISCERN   |
 
 Spine phonemes (NOT on wheel): x, d, k, q, g, f, h
 """
@@ -37,24 +37,24 @@ WHEEL_16 = ['n', 'w', 's', 'sh', 'A', 't', 'H', 'r', 'm', 'a', 'y', 'b', 'p', 'i
 # Phoneme to wheel position (0-indexed)
 WHEEL_INDEX = {p: i for i, p in enumerate(WHEEL_16)}
 
-# Core verbs for wheel phonemes
+# Core verbs for wheel phonemes (M equilibrium from v62 lexicon)
 WHEEL_VERBS = {
-    'n':  'WEAVE',      # Neith - interlacing
-    'w':  'PROTECT',    # Wadjet - shielding
-    's':  'BIND',       # Serpent - containing
-    'sh': 'LIFT',       # Shu - raising
-    'A':  'OPEN',       # Aleph - glottal opening
-    't':  'MEASURE',    # Thoth - marking
-    'H':  'PIERCE',     # Pharyngeal - penetrating
-    'r':  'ILLUMINE',   # Ra - making visible
-    'm':  'WEIGH',      # Ma'at - balancing
-    'a':  'SOURCE',     # Ayin/Atum - origin
-    'y':  'YEARN',      # Palatal glide - reaching
-    'b':  'BIRTH',      # Ba - emerging
-    'p':  'FORM',       # Ptah - shaping
-    'i':  'POINT',      # Yod - indicating
-    'kh': 'MOLD',       # Khnum - shaping
-    'dj': 'JUDGE',      # Palatalized - decreeing
+    'n':  'INTEGRATE',  # Neith - weaving into coherence
+    'w':  'CHARGE',     # Wadjet - life force, chi
+    's':  'EMERGE',     # Sekhmet - transformation
+    'sh': 'DIRECT',     # Shu - navigation
+    'A':  'LEAD',       # Atum - shepherding
+    't':  'READ',       # Seshat - inscription
+    'H':  'EXPRESS',    # Horus - meaning
+    'r':  'SHINE',      # Ra - radiance
+    'm':  'TRUE',       # Ma'at - truth
+    'a':  'HONOUR',     # Anubis - threshold
+    'y':  'DEVOTE',     # Isis - devotion
+    'b':  'HARVEST',    # Taweret - cultivation
+    'p':  'STORE',      # Ptah - gathering
+    'i':  'BESTOW',     # Ihy - legacy
+    'kh': 'EMBODY',     # Khnum - incarnation
+    'dj': 'DISCERN',    # Thoth - discernment
 }
 
 # Spine phonemes (not on wheel) - for reference

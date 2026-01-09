@@ -59,24 +59,24 @@ class TestWheelVerbs:
     """Tests for wheel verb definitions."""
     
     def test_wheel_verbs(self):
-        """Wheel phoneme-verb associations are correct."""
+        """Wheel phoneme-verb associations are correct (v62)."""
         expected = {
-            'n': 'WEAVE',
-            'w': 'PROTECT',
-            's': 'BIND',
-            'sh': 'LIFT',
-            'A': 'OPEN',
-            't': 'MEASURE',
-            'H': 'PIERCE',
-            'r': 'ILLUMINE',
-            'm': 'WEIGH',
-            'a': 'SOURCE',
-            'y': 'YEARN',
-            'b': 'BIRTH',
-            'p': 'FORM',
-            'i': 'POINT',
-            'kh': 'MOLD',
-            'dj': 'JUDGE',
+            'n': 'INTEGRATE',
+            'w': 'CHARGE',
+            's': 'EMERGE',
+            'sh': 'DIRECT',
+            'A': 'LEAD',
+            't': 'READ',
+            'H': 'EXPRESS',
+            'r': 'SHINE',
+            'm': 'TRUE',
+            'a': 'HONOUR',
+            'y': 'DEVOTE',
+            'b': 'HARVEST',
+            'p': 'STORE',
+            'i': 'BESTOW',
+            'kh': 'EMBODY',
+            'dj': 'DISCERN',
         }
         for phoneme, verb in expected.items():
             assert WHEEL_VERBS[phoneme] == verb, f"{phoneme} should map to {verb}"
@@ -195,7 +195,7 @@ class TestPhonemesToVerbs:
         """Wheel phonemes convert to verbs correctly."""
         phonemes = ['p', 't', 'r']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['FORM', 'MEASURE', 'ILLUMINE']
+        assert verbs == ['STORE', 'READ', 'SHINE']
     
     def test_spine_phonemes(self):
         """Spine phonemes convert to verbs correctly."""
@@ -207,13 +207,13 @@ class TestPhonemesToVerbs:
         """Mixed wheel+spine phonemes convert correctly."""
         phonemes = ['r', 'd', 't', 'k']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['ILLUMINE', 'DO', 'MEASURE', 'CYCLE']
+        assert verbs == ['SHINE', 'DO', 'READ', 'CYCLE']
     
     def test_unknown_phoneme(self):
         """Unknown phonemes marked with ?."""
         phonemes = ['p', 'xyz', 'r']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['FORM', '?xyz', 'ILLUMINE']
+        assert verbs == ['STORE', '?xyz', 'SHINE']
     
     def test_empty_list(self):
         """Empty list returns empty list."""
@@ -233,7 +233,7 @@ class TestWheelTrajectory:
     def test_basic_trajectory(self):
         """Trajectory produces arrow-joined string."""
         traj = wheel_trajectory('ptr')
-        assert traj == 'FORM → MEASURE → ILLUMINE'
+        assert traj == 'STORE → READ → SHINE'
     
     def test_empty_trajectory(self):
         """Empty input produces empty string."""
@@ -243,7 +243,7 @@ class TestWheelTrajectory:
     def test_single_phoneme_trajectory(self):
         """Single phoneme has no arrows."""
         traj = wheel_trajectory('r')
-        assert traj == 'ILLUMINE'
+        assert traj == 'SHINE'
 
 
 class TestVowelMarkers:
@@ -275,14 +275,14 @@ class TestRealWords:
         # ayin → a, n → n, kh → kh
         assert phonemes == ['a', 'n', 'kh']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['SOURCE', 'WEAVE', 'MOLD']
+        assert verbs == ['HONOUR', 'INTEGRATE', 'EMBODY']
     
     def test_ntr(self):
         """nṯr (netjer - god) decodes correctly."""
         phonemes = leiden_to_wheel('nṯr')
         assert phonemes == ['n', 't', 'r']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['WEAVE', 'MEASURE', 'ILLUMINE']
+        assert verbs == ['INTEGRATE', 'READ', 'SHINE']
     
     def test_maat(self):
         """mꜣꜥt (Ma'at) decodes correctly."""
@@ -295,14 +295,14 @@ class TestRealWords:
         phonemes = leiden_to_wheel('rꜥ')
         assert phonemes == ['r', 'a']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['ILLUMINE', 'SOURCE']
+        assert verbs == ['SHINE', 'HONOUR']
     
     def test_ptah(self):
         """ptḥ (Ptah) decodes correctly."""
         phonemes = leiden_to_wheel('ptḥ')
         assert phonemes == ['p', 't', 'H']  # Pharyngeal H
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['FORM', 'MEASURE', 'PIERCE']
+        assert verbs == ['STORE', 'READ', 'EXPRESS']
 
 
 class TestPhonemeClassification:

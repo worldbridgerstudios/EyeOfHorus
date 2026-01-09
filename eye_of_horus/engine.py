@@ -139,119 +139,119 @@ class Hourglass:
         return self.equilibrium_masc
 
 
-# The complete 16-phoneme hourglass lexicon (WHEEL phonemes)
+# The complete 16-phoneme hourglass lexicon (WHEEL phonemes) - v62
 PHONEME_HOURGLASSES: Dict[str, Hourglass] = {
     # Position 1: n
     'n': Hourglass(
         phoneme='n', deity='Neith',
-        equilibrium_masc='WEAVE', equilibrium_fem='CONNECT',
-        min_masc='SEVER', max_masc='FUSE',
-        min_fem='ISOLATE', max_fem='MERGE'
+        equilibrium_masc='INTEGRATE', equilibrium_fem='WEAVE',
+        min_masc='FRAGMENT', max_masc='FUSE',
+        min_fem='UNRAVEL', max_fem='INTERLOCK'
     ),
     # Position 2: w
     'w': Hourglass(
         phoneme='w', deity='Wadjet',
-        equilibrium_masc='PROTECT', equilibrium_fem='SHELTER',
-        min_masc='EXPOSE', max_masc='ENCLOSE',
-        min_fem='ABANDON', max_fem='SMOTHER'
+        equilibrium_masc='CHARGE', equilibrium_fem='FLOW',
+        min_masc='DRAIN', max_masc='SURGE',
+        min_fem='STAGNATE', max_fem='CIRCULATE'
     ),
     # Position 3: s
     's': Hourglass(
-        phoneme='s', deity='Set/Serpent',
-        equilibrium_masc='BIND', equilibrium_fem='COMMIT',
-        min_masc='LOOSE', max_masc='CONSTRICT',
-        min_fem='FREE', max_fem='SACRIFICE'
+        phoneme='s', deity='Sekhmet',
+        equilibrium_masc='EMERGE', equilibrium_fem='COCOON',
+        min_masc='REGRESS', max_masc='BURST',
+        min_fem='EXPOSE', max_fem='ENCASE'
     ),
     # Position 4: sh
     'sh': Hourglass(
         phoneme='sh', deity='Shu',
-        equilibrium_masc='LIFT', equilibrium_fem='SUPPORT',
-        min_masc='PRESS', max_masc='SOAR',
-        min_fem='BURDEN', max_fem='ELEVATE'
+        equilibrium_masc='DIRECT', equilibrium_fem='ALIGN',
+        min_masc='SCATTER', max_masc='COMMAND',
+        min_fem='DRIFT', max_fem='ORIENT'
     ),
     # Position 5: A (aleph - glottal stop)
     'A': Hourglass(
-        phoneme='A', deity='—',
-        equilibrium_masc='OPEN', equilibrium_fem='ADMIT',
-        min_masc='SEAL', max_masc='GAPE',
-        min_fem='CLOSE', max_fem='WELCOME'
+        phoneme='A', deity='Atum',
+        equilibrium_masc='LEAD', equilibrium_fem='TEND',
+        min_masc='ABANDON', max_masc='DRIVE',
+        min_fem='NEGLECT', max_fem='NURTURE'
     ),
     # Position 6: t
     't': Hourglass(
-        phoneme='t', deity='Thoth',
-        equilibrium_masc='MEASURE', equilibrium_fem='ATTEND',
-        min_masc='CHAOS', max_masc='RIGIDIFY',
-        min_fem='NEGLECT', max_fem='PERFECT'
+        phoneme='t', deity='Seshat',
+        equilibrium_masc='READ', equilibrium_fem='ETCH',
+        min_masc='MISREAD', max_masc='DECODE',
+        min_fem='ERASE', max_fem='INSCRIBE'
     ),
     # Position 7: H (pharyngeal)
     'H': Hourglass(
-        phoneme='H', deity='—',
-        equilibrium_masc='PIERCE', equilibrium_fem='PERCEIVE',
-        min_masc='DEFLECT', max_masc='IMPALE',
-        min_fem='OVERLOOK', max_fem='PENETRATE'
+        phoneme='H', deity='Horus',
+        equilibrium_masc='EXPRESS', equilibrium_fem='INTERPRET',
+        min_masc='SUPPRESS', max_masc='PROCLAIM',
+        min_fem='MISREAD', max_fem='COMPREHEND'
     ),
     # Position 8: r
     'r': Hourglass(
         phoneme='r', deity='Ra',
-        equilibrium_masc='ILLUMINE', equilibrium_fem='REVEAL',
-        min_masc='OBSCURE', max_masc='BLIND',
-        min_fem='CONCEAL', max_fem='EXPOSE'
+        equilibrium_masc='SHINE', equilibrium_fem='BASK',
+        min_masc='DIM', max_masc='BLAZE',
+        min_fem='SHADE', max_fem='ABSORB'
     ),
     # Position 9: m
     'm': Hourglass(
         phoneme='m', deity="Ma'at",
-        equilibrium_masc='WEIGH', equilibrium_fem='COMPASSION',
-        min_masc='DIMINISH', max_masc='AMPLIFY',
-        min_fem='TENDERNESS', max_fem='FORGIVENESS'
+        equilibrium_masc='TRUE', equilibrium_fem='TRUST',
+        min_masc='FALSIFY', max_masc='VERIFY',
+        min_fem='DOUBT', max_fem='BELIEVE'
     ),
     # Position 10: a (ayin)
     'a': Hourglass(
-        phoneme='a', deity='Atum',
-        equilibrium_masc='SOURCE', equilibrium_fem='RECEPTIVE',
-        min_masc='VOID', max_masc='FULLNESS',
-        min_fem='EMPTY', max_fem='PREGNANT'
+        phoneme='a', deity='Anubis',
+        equilibrium_masc='HONOUR', equilibrium_fem='ALLOW',
+        min_masc='DISHONOUR', max_masc='REVERE',
+        min_fem='BLOCK', max_fem='PERMIT'
     ),
     # Position 11: y
     'y': Hourglass(
-        phoneme='y', deity='—',
-        equilibrium_masc='YEARN', equilibrium_fem='YIELD',
-        min_masc='REPEL', max_masc='CRAVE',
-        min_fem='RESIST', max_fem='SURRENDER'
+        phoneme='y', deity='Isis',
+        equilibrium_masc='DEVOTE', equilibrium_fem='RESTORE',
+        min_masc='BETRAY', max_masc='CONSECRATE',
+        min_fem='NEGLECT', max_fem='HEAL'
     ),
     # Position 12: b
     'b': Hourglass(
-        phoneme='b', deity='Ba',
-        equilibrium_masc='BIRTH', equilibrium_fem='BEAR',
-        min_masc='BLOCK', max_masc='BURST',
-        min_fem='WITHHOLD', max_fem='BESTOW'
+        phoneme='b', deity='Taweret',
+        equilibrium_masc='HARVEST', equilibrium_fem='CULTIVATE',
+        min_masc='WASTE', max_masc='REAP',
+        min_fem='DEPLETE', max_fem='NOURISH'
     ),
     # Position 13: p
     'p': Hourglass(
         phoneme='p', deity='Ptah',
-        equilibrium_masc='FORM', equilibrium_fem='TEND',
-        min_masc='SCATTER', max_masc='FIX',
-        min_fem='NEGLECT', max_fem='PERFECT'
+        equilibrium_masc='STORE', equilibrium_fem='GATHER',
+        min_masc='SCATTER', max_masc='HOARD',
+        min_fem='DISPERSE', max_fem='COLLECT'
     ),
     # Position 14: i (yod)
     'i': Hourglass(
-        phoneme='i', deity='—',
-        equilibrium_masc='POINT', equilibrium_fem='INDICATE',
-        min_masc='BLUR', max_masc='TARGET',
-        min_fem='DIFFUSE', max_fem='DIRECT'
+        phoneme='i', deity='Ihy',
+        equilibrium_masc='BESTOW', equilibrium_fem='PROTECT',
+        min_masc='WITHHOLD', max_masc='GIFT',
+        min_fem='EXPOSE', max_fem='GUARD'
     ),
     # Position 15: kh
     'kh': Hourglass(
         phoneme='kh', deity='Khnum',
-        equilibrium_masc='MOLD', equilibrium_fem='SURRENDER',
-        min_masc='SHATTER', max_masc='PETRIFY',
-        min_fem='RELEASE', max_fem='DISSOLVE'
+        equilibrium_masc='EMBODY', equilibrium_fem='CAPACITY',
+        min_masc='FUMBLE', max_masc='MASTER',
+        min_fem='NUMB', max_fem='DEFT'
     ),
     # Position 16: dj (palatalized)
     'dj': Hourglass(
-        phoneme='dj', deity='—',
-        equilibrium_masc='JUDGE', equilibrium_fem='DISCERN',
-        min_masc='CONFUSE', max_masc='CONDEMN',
-        min_fem='DOUBT', max_fem='DECREE'
+        phoneme='dj', deity='Thoth',
+        equilibrium_masc='DISCERN', equilibrium_fem='ACT',
+        min_masc='CONFUSE', max_masc='PERCEIVE',
+        min_fem='HESITATE', max_fem='EXECUTE'
     ),
 }
 

@@ -43,7 +43,7 @@ class TestEndToEndDecoding:
         translit = 'ptr'
         phonemes = leiden_to_wheel(translit)
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['FORM', 'MEASURE', 'ILLUMINE']
+        assert verbs == ['STORE', 'READ', 'SHINE']
     
     def test_leiden_to_mode_decode(self):
         """Full pipeline with mode selection."""
@@ -52,11 +52,11 @@ class TestEndToEndDecoding:
         
         # Masculine reading
         masc_verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.EQUILIBRIUM)
-        assert masc_verbs == ['ILLUMINE', 'SOURCE']
+        assert masc_verbs == ['SHINE', 'HONOUR']
         
         # Feminine reading
         fem_verbs = decode_with_mode(phonemes, Mode.FEMININE, Pole.EQUILIBRIUM)
-        assert fem_verbs == ['REVEAL', 'RECEPTIVE']
+        assert fem_verbs == ['BASK', 'ALLOW']
     
     def test_abracadabra_full_decode(self):
         """ABRACADABRA end-to-end with all modes."""
@@ -64,15 +64,15 @@ class TestEndToEndDecoding:
         
         # Equilibrium (core verbs)
         eq_traj = decode_trajectory(phonemes, Mode.MASCULINE, Pole.EQUILIBRIUM)
-        assert eq_traj == 'SOURCE → BIRTH → ILLUMINE → CYCLE → DO → BIRTH → ILLUMINE'
+        assert eq_traj == 'HONOUR → HARVEST → SHINE → CYCLE → DO → HARVEST → SHINE'
         
         # Minima
         min_verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.MINIMA)
-        assert min_verbs == ['VOID', 'BLOCK', 'OBSCURE', 'HALT', 'STALL', 'BLOCK', 'OBSCURE']
+        assert min_verbs == ['DISHONOUR', 'WASTE', 'DIM', 'HALT', 'STALL', 'WASTE', 'DIM']
         
         # Maxima
         max_verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.MAXIMA)
-        assert max_verbs == ['FULLNESS', 'BURST', 'BLIND', 'ACCELERATE', 'FORCE', 'BURST', 'BLIND']
+        assert max_verbs == ['REVERE', 'REAP', 'BLAZE', 'ACCELERATE', 'FORCE', 'REAP', 'BLAZE']
 
 
 class TestVerbConsistency:
@@ -165,7 +165,7 @@ class TestScaleApplication:
         verbs_phylo = decode_with_mode([phoneme], Mode.MASCULINE, Pole.EQUILIBRIUM)
         verbs_cosmo = decode_with_mode([phoneme], Mode.MASCULINE, Pole.EQUILIBRIUM)
         
-        assert verbs_onto == verbs_phylo == verbs_cosmo == ['WEAVE']
+        assert verbs_onto == verbs_phylo == verbs_cosmo == ['INTEGRATE']
 
 
 class TestRealWorldScenarios:
@@ -180,19 +180,19 @@ class TestRealWorldScenarios:
         assert phonemes.count('a') >= 1
     
     def test_deity_name_neith(self):
-        """Neith (n-t) decodes as WEAVE-MEASURE."""
+        """Neith (n-t) decodes as INTEGRATE-READ."""
         phonemes = leiden_to_wheel('nt')
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['WEAVE', 'MEASURE']
+        assert verbs == ['INTEGRATE', 'READ']
     
     def test_woman_weave_men_concept(self):
-        """Test the WOMAN = WEAVE-MEN phonemic concept."""
+        """Test the WOMAN = CHARGE-TRUE-INTEGRATE phonemic concept."""
         # In English: w-o-m-a-n
         # Phonemically: w-m-n (stripping vowels)
         phonemes = ['w', 'm', 'n']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['PROTECT', 'WEIGH', 'WEAVE']
-        # PROTECT-WEIGH-WEAVE: she who protects, weighs, and weaves
+        assert verbs == ['CHARGE', 'TRUE', 'INTEGRATE']
+        # CHARGE-TRUE-INTEGRATE: she who charges, truths, and integrates
 
 
 class TestModuleImports:
