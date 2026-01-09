@@ -73,7 +73,9 @@ from .pyramid import (
     get_pyramid_texts,
     decode,
     decode_range,
+    decode_bidirectional,
     DecodedLine,
+    BidirectionalLine,
 )
 
 # Fibonacci Rhythm & Breath
