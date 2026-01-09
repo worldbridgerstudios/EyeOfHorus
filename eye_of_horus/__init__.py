@@ -56,6 +56,9 @@ from .corpus import (
     load_tla_corpus,
     search_corpus,
     Sentence,
+    load_semantic_network,
+    get_edge_signature,
+    find_edges_by_signature,
 )
 
 # Validation tools

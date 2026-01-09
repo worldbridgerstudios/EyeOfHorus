@@ -172,3 +172,84 @@ def find_by_verb_sequence(verbs: List[str], limit: int = 10) -> Iterator[Sentenc
         if sent.verbs[:len(verbs)] == verbs:
             yield sent
             count += 1
+
+
+# Semantic network data
+_semantic_network: dict = None
+
+
+def load_semantic_network() -> dict:
+    """
+    Load the pre-computed semantic network of directed edges.
+    
+    Returns dict with:
+        - metadata: corpus stats, baseline frequencies
+        - nodes: 16 wheel phonemes with verbs
+        - edges: 240 directed pairs with semantic signatures
+    
+    Each edge has:
+        - source, target: phonemes
+        - source_verb, target_verb: verb names
+        - count: occurrences in corpus
+        - signatures: dict of semantic field → {count, ratio, observed_pct}
+        - top_signatures: [(field, ratio), ...] top 3 by ratio
+        - examples: sample sentences
+    """
+    global _semantic_network
+    
+    if _semantic_network is not None:
+        return _semantic_network
+    
+    path = Path(__file__).parent / 'data' / 'semantic_network.json'
+    with open(path, 'r', encoding='utf-8') as f:
+        _semantic_network = json.load(f)
+    
+    return _semantic_network
+
+
+def get_edge_signature(source: str, target: str) -> dict:
+    """
+    Get semantic signature for a directed edge.
+    
+    Args:
+        source: source phoneme (e.g., 'a')
+        target: target phoneme (e.g., 'n')
+    
+    Returns:
+        Edge data with signatures, or None if not found
+    """
+    network = load_semantic_network()
+    for edge in network['edges']:
+        if edge['source'] == source and edge['target'] == target:
+            return edge
+    return None
+
+
+def find_edges_by_signature(field: str, min_ratio: float = 2.0) -> list:
+    """
+    Find all edges strongly associated with a semantic field.
+    
+    Args:
+        field: semantic field (divine, death, life, eye, speech, 
+               offering, protection, water, sky, earth, king, magic)
+        min_ratio: minimum ratio vs baseline (default 2.0 = 2x expected)
+    
+    Returns:
+        List of edges sorted by ratio descending
+    """
+    network = load_semantic_network()
+    results = []
+    
+    for edge in network['edges']:
+        if field in edge['signatures']:
+            sig = edge['signatures'][field]
+            if sig['ratio'] >= min_ratio:
+                results.append({
+                    'edge': f"{edge['source']}→{edge['target']}",
+                    'verbs': f"{edge['source_verb']}→{edge['target_verb']}",
+                    'ratio': sig['ratio'],
+                    'count': edge['count']
+                })
+    
+    results.sort(key=lambda x: -x['ratio'])
+    return results
