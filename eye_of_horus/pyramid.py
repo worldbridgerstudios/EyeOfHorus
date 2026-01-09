@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 from .corpus import Sentence, load_tla_corpus
 from .mapping import WHEEL_VERBS, leiden_to_wheel, phonemes_to_verbs
+from .engine import get_hourglass, Mode, Pole
 
 
 # Cache for pyramid texts
@@ -356,3 +357,181 @@ def decode_range(start: int, end: int, verbose: bool = True) -> List[DecodedLine
 if __name__ == '__main__':
     # Decode first 9 lines bidirectionally (Fibonacci breath block)
     decode_bidirectional(1, 9)
+
+
+# =============================================================================
+# LAYERED DECODE: Five simultaneous readings
+# =============================================================================
+
+@dataclass
+class LayeredReading:
+    """Five parallel readings of a phoneme sequence."""
+    phonemes: List[str]
+    core: List[str]      # All equilibrium
+    f1: List[str]        # min_fem alternating with eq
+    f2: List[str]        # max_fem alternating with eq
+    m1: List[str]        # min_masc alternating with eq
+    m2: List[str]        # max_masc alternating with eq
+
+
+def get_layered_verb(phoneme: str, position: int, mode: Mode, pole: Pole) -> str:
+    """
+    Get verb for a phoneme at a position in a specific layer.
+    
+    Pattern: (pole)(eq)(pole)(eq)(pole)...
+    - Odd positions (0, 2, 4...): use the specified pole
+    - Even positions (1, 3, 5...): use equilibrium
+    """
+    hg = get_hourglass(phoneme)
+    if not hg:
+        return f'?{phoneme}'
+    
+    # Alternating: position 0, 2, 4... = pole; position 1, 3, 5... = eq
+    use_pole = (position % 2 == 0)
+    
+    if not use_pole:
+        # Equilibrium position - use core verb based on mode
+        return hg.equilibrium_masc if mode == Mode.MASCULINE else hg.equilibrium_fem
+    
+    # Pole position
+    if mode == Mode.MASCULINE:
+        return hg.min_masc if pole == Pole.MINIMA else hg.max_masc
+    else:
+        return hg.min_fem if pole == Pole.MINIMA else hg.max_fem
+
+
+def decode_layered_sequence(phonemes: List[str]) -> LayeredReading:
+    """
+    Decode a phoneme sequence into five parallel layers.
+    
+    Layers:
+    - core: all equilibrium (masculine by convention)
+    - f1: min_fem at odd positions, eq at even
+    - f2: max_fem at odd positions, eq at even
+    - m1: min_masc at odd positions, eq at even
+    - m2: max_masc at odd positions, eq at even
+    """
+    core = []
+    f1, f2 = [], []
+    m1, m2 = [], []
+    
+    for i, p in enumerate(phonemes):
+        hg = get_hourglass(p)
+        if not hg:
+            verb = f'?{p}'
+            core.append(verb)
+            f1.append(verb)
+            f2.append(verb)
+            m1.append(verb)
+            m2.append(verb)
+            continue
+        
+        # Core is always equilibrium
+        core.append(hg.equilibrium_masc)
+        
+        # Layered: alternating pole/eq
+        f1.append(get_layered_verb(p, i, Mode.FEMININE, Pole.MINIMA))
+        f2.append(get_layered_verb(p, i, Mode.FEMININE, Pole.MAXIMA))
+        m1.append(get_layered_verb(p, i, Mode.MASCULINE, Pole.MINIMA))
+        m2.append(get_layered_verb(p, i, Mode.MASCULINE, Pole.MAXIMA))
+    
+    return LayeredReading(
+        phonemes=phonemes,
+        core=core,
+        f1=f1, f2=f2,
+        m1=m1, m2=m2,
+    )
+
+
+def decode_layered(
+    start: int = 1,
+    end: int = 9,
+    verbose: bool = True
+) -> Tuple[LayeredReading, LayeredReading]:
+    """
+    Decode lines with five parallel layers, in both directions.
+    
+    ASCEND (L→R): core, then F layers, then M layers
+    PENETRATE (R→L): core, then M layers, then F layers
+    
+    Args:
+        start: First line (1-based)
+        end: Last line (1-based, inclusive)
+        verbose: Print results
+        
+    Returns:
+        Tuple of (ascend_reading, penetrate_reading)
+    """
+    texts = get_pyramid_texts()
+    
+    start_idx = start - 1
+    end_idx = min(end, len(texts))
+    
+    # Collect all phonemes
+    all_phonemes = []
+    for i in range(start_idx, end_idx):
+        s = texts[i]
+        phonemes = leiden_to_wheel(s.transliteration)
+        all_phonemes.extend(phonemes)
+    
+    # Decode forward (ASCEND)
+    ascend = decode_layered_sequence(all_phonemes)
+    
+    # Decode reverse (PENETRATE)
+    penetrate = decode_layered_sequence(list(reversed(all_phonemes)))
+    
+    if verbose:
+        print_layered(ascend, penetrate, start, end_idx)
+    
+    return ascend, penetrate
+
+
+def print_layered(ascend: LayeredReading, penetrate: LayeredReading, start: int, end: int):
+    """Pretty-print layered decode results."""
+    
+    print(f"\n{'═' * 70}")
+    print(f"LAYERED DECODE: Lines {start}-{end}")
+    print(f"{'═' * 70}")
+    print(f"Total phonemes: {len(ascend.phonemes)}")
+    
+    # ASCEND: core, F, M
+    print(f"\n{'─' * 70}")
+    print("ASCEND (L→R)")
+    print("F leads up: core → f1 → f2 → m1 → m2")
+    print(f"{'─' * 70}")
+    
+    print("\n[CORE]")
+    print(build_paragraph(ascend.core, "ascend"))
+    
+    print("\n[F1 - min_fem]")
+    print(build_paragraph(ascend.f1, "ascend"))
+    
+    print("\n[F2 - max_fem]")
+    print(build_paragraph(ascend.f2, "ascend"))
+    
+    print("\n[M1 - min_masc]")
+    print(build_paragraph(ascend.m1, "ascend"))
+    
+    print("\n[M2 - max_masc]")
+    print(build_paragraph(ascend.m2, "ascend"))
+    
+    # PENETRATE: core, M, F
+    print(f"\n{'─' * 70}")
+    print("PENETRATE (R→L)")
+    print("M leads down: core → m1 → m2 → f1 → f2")
+    print(f"{'─' * 70}")
+    
+    print("\n[CORE]")
+    print(build_paragraph(penetrate.core, "penetrate"))
+    
+    print("\n[M1 - min_masc]")
+    print(build_paragraph(penetrate.m1, "penetrate"))
+    
+    print("\n[M2 - max_masc]")
+    print(build_paragraph(penetrate.m2, "penetrate"))
+    
+    print("\n[F1 - min_fem]")
+    print(build_paragraph(penetrate.f1, "penetrate"))
+    
+    print("\n[F2 - max_fem]")
+    print(build_paragraph(penetrate.f2, "penetrate"))
