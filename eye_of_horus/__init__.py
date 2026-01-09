@@ -3,7 +3,7 @@
 #
 # Engine: 16 wheel phonemes × 3 spine axes = 408 grammar (T(16) × 3)
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 # Core mapping (Leiden → wheel phonemes)
 from .mapping import (
@@ -74,8 +74,10 @@ from .pyramid import (
     decode,
     decode_range,
     decode_bidirectional,
+    decode_layered,
     DecodedLine,
     BidirectionalLine,
+    LayeredReading,
 )
 
 # Fibonacci Rhythm & Breath

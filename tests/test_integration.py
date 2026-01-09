@@ -228,7 +228,7 @@ class TestVersioning:
         import eye_of_horus
         assert hasattr(eye_of_horus, '__version__')
     
-    def test_version_is_0_3(self):
-        """Version is 0.3.0 (with spine phoneme integration)."""
+    def test_version_is_0_4(self):
+        """Version is 0.4.0 (with layered decode)."""
         import eye_of_horus
-        assert eye_of_horus.__version__ == '0.3.0'
+        assert eye_of_horus.__version__ == '0.4.0'
