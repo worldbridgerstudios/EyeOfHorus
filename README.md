@@ -1,5 +1,9 @@
 # Eye of Horus
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18196732.svg)](https://doi.org/10.5281/zenodo.18196732)
+[![PyPI version](https://badge.fury.io/py/eye-of-horus.svg)](https://pypi.org/project/eye-of-horus/)
+[![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
+
 A phonemic engine for reading ancient Egyptian through the 16-position wheel.
 
 ## The 408 Grammar
@@ -8,7 +12,7 @@ A phonemic engine for reading ancient Egyptian through the 16-position wheel.
 T(16) = 136 wheel relations × 3 spine axes = 408
 ```
 
-Sixteen phonemes on a wheel. Three scales on a spine. Five layers per reading. Every Egyptian utterance decoded through directed semantic relations.
+Sixteen phonemes on a vorticular wheel. Three scales on a spine. Trigonal decode across three modes. Every Egyptian utterance decoded through directed semantic relations.
 
 ## Installation
 
@@ -39,7 +43,7 @@ Each phoneme maps 1:1 to a deity, with masculine and feminine equilibrium verbs 
 |-----|-----|-------|---------------|---------------|
 | 1 | n | Neith | WEAVE | INTEGRATE |
 | 2 | w | Wadjet | FLOW | RADIATE |
-| 3 | s | Sekhmet | COCOON | EMERGE |
+| 3 | s | Sekhmet | CRYSTALLISE | EMERGE |
 | 4 | sh | Shu | ALIGN | DIRECT |
 | 5 | A | Atum | TEND | LEAD |
 | 6 | t | Seshat | ETCH | READ |
@@ -68,9 +72,9 @@ Secondary spine: g (GROUND), f (BREATHE), h (SEE).
 
 **Critical:** Plain d and k are spine. The wheel has dj (palatalized), not plain d.
 
-## The Hourglass (5 positions)
+## The Pyramidal Architecture (5 positions)
 
-Each phoneme occupies five positions in an hourglass structure:
+Each phoneme occupies five positions in a pyramidal structure (two pyramids apex-to-apex):
 
 ```
           max_masc
@@ -90,9 +94,9 @@ Each phoneme occupies five positions in an hourglass structure:
           min_fem
 ```
 
-## Five-Layer Reading
+## Trigonal Decode
 
-Every phoneme sequence generates five parallel interpretations:
+The three modes (equilibrium, feminine, masculine) generate five parallel interpretations:
 
 | Layer | Mode | Pole | Pattern |
 |-------|------|------|---------|
@@ -123,8 +127,8 @@ print(ascend)
 ## Total Decode Space
 
 ```
-5 layers × 2 directions = 10 simultaneous readings
-408 relations × 5 layers = 2,040 meaning-positions
+3 modes (5 outputs) × 2 directions = 10 simultaneous readings
+408 relations × 5 positions = 2,040 meaning-positions
 ```
 
 ## Directed Pairs
@@ -175,6 +179,10 @@ for edge in find_edges_by_signature('life', 5.0):
     print(f"{edge['edge']} {edge['verbs']} — {edge['ratio']}x")
 ```
 
+## Performance
+
+Full corpus decode in 18ms on MacBook Air M4 (14µs per sentence).
+
 ## Corpus
 
 | Dataset | Sentences | Source |
@@ -213,6 +221,21 @@ from eye_of_horus import (
 ## License
 
 MIT
+
+## Citation
+
+If you use this in academic work:
+
+```bibtex
+@software{brown_2025_eye_of_horus,
+  author       = {Brown, Nicholas David},
+  title        = {{Eye of Horus: A Phonemic Analysis Engine for Ancient Egyptian Texts}},
+  year         = 2026,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.18196732},
+  url          = {https://doi.org/10.5281/zenodo.18196732}
+}
+```
 
 ## Author
 

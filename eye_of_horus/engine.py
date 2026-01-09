@@ -158,7 +158,7 @@ PHONEME_HOURGLASSES: Dict[str, Hourglass] = {
     # Position 3: s
     's': Hourglass(
         phoneme='s', deity='Sekhmet',
-        equilibrium_masc='EMERGE', equilibrium_fem='COCOON',
+        equilibrium_masc='EMERGE', equilibrium_fem='CRYSTALLISE',
         min_masc='REGRESS', max_masc='BURST',
         min_fem='EXPOSE', max_fem='ENCASE'
     ),
