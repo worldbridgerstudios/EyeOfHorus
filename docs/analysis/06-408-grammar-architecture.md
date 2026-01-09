@@ -191,3 +191,7 @@ Independent Researcher
 ---
 
 *"136 wheel relations × 3 spine axes = 408. The grammar IS the constant."*
+
+---
+
+**See also:** [Doc 12](12-layered-decode.md) for the five-layer decode that applies the hourglass structure to generate simultaneous readings.

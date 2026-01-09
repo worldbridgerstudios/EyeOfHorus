@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "eye-of-horus"
-version = "0.1.0"
-description = "Egyptian phonemic analysis through the 16-position wheel"
+version = "0.4.0"
+description = "Egyptian phonemic analysis through the 16-position wheel and 408 grammar"
 readme = "README.md"
 license = "MIT"
 authors = [

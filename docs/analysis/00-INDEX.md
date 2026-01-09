@@ -48,7 +48,15 @@ These documents record the progressive discoveries made during the development o
 
 | # | Document | Summary |
 |---|----------|---------|
-| 11 | [Wheel Phoneme Specification](11-wheel-phoneme-correction.md) | True wheel: n-w-s-sh-A-t-H-r-m-a-y-b-p-i-kh-dj. Leiden mappings. 5 verbs pending. |
+| 11 | [Wheel Phoneme Specification](11-wheel-phoneme-correction.md) | True wheel: n-w-s-sh-A-t-H-r-m-a-y-b-p-i-kh-dj. Leiden mappings fixed. |
+
+---
+
+### Depth: Layered Reading
+
+| # | Document | Summary |
+|---|----------|---------|
+| 12 | [Layered Decode](12-layered-decode.md) | Five simultaneous readings: core + f1/f2 + m1/m2. ASCEND vs PENETRATE polarity. |
 
 ---
 
@@ -58,6 +66,7 @@ These documents record the progressive discoveries made during the development o
 T(16) = 136                    # Triangular number, unique wheel relations
 136 × 3 = 408                  # × spine axes = total grammar
 16 × 5 = 80                    # Wheel phonemes × hourglass positions
+5 layers × 2 directions = 10   # Total simultaneous readings
 1 + 2 + 3 + 2 + 1 = 9          # Fibonacci breath (genesis block)
 1 : 1 : 2                      # Script ratio (hieroglyph:hieratic:Coptic)
 ```
@@ -69,9 +78,25 @@ T(16) = 136                    # Triangular number, unique wheel relations
 | System | Phonemes | Function | Temporal Layer |
 |--------|----------|----------|----------------|
 | **Wheel** | 16 (n-w-s-sh-A-t-H-r-m-a-y-b-p-i-kh-dj) | Rotating, transmissible | Post-merger (~600 BCE) |
-| **Spine** | x, d, k (primary); q, tj, g, f (secondary) | Fixed frame, scales | Pre-merger (~2000 BCE) |
+| **Spine** | x, d, k (primary); q, tj, g, f, h (secondary) | Fixed frame, scales | Pre-merger (~2000 BCE) |
 
 **Critical distinction:** Plain **d** and **k** are spine phonemes. The wheel has **dj** (palatalized) not plain d.
+
+---
+
+## The Five Layers
+
+| Layer | Position Pattern | Mode | Pole |
+|-------|------------------|------|------|
+| core | all eq | — | equilibrium |
+| f1 | (pole)(eq)(pole)... | feminine | minima |
+| f2 | (pole)(eq)(pole)... | feminine | maxima |
+| m1 | (pole)(eq)(pole)... | masculine | minima |
+| m2 | (pole)(eq)(pole)... | masculine | maxima |
+
+**Direction determines order:**
+- **ASCEND** (L→R): core → f1 → f2 → m1 → m2 (feminine leads up)
+- **PENETRATE** (R→L): core → m1 → m2 → f1 → f2 (masculine leads down)
 
 ---
 
@@ -82,10 +107,11 @@ Independent Researcher
 
 ---
 
-## Date
+## Version
 
-Index created: January 2026
+- **v0.4.0** — Layered decode, corrected wheel mapping
+- Index updated: January 2026
 
 ---
 
-*"The wheel rotates. The spine holds. The grammar speaks."*
+*"The wheel rotates. The spine holds. The layers speak simultaneously."*

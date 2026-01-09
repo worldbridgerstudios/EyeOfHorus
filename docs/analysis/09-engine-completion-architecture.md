@@ -1,23 +1,31 @@
 # Engine Completion Architecture: Status & Remaining Work
 
-## Overview
-
-The phonemic engine now has a solid foundation. This document tracks what's implemented and what remains.
+**Updated:** January 2026  
+**Version:** 0.4.0
 
 ---
 
-## ✅ IMPLEMENTED
+## Overview
+
+The phonemic engine is now substantially complete. This document tracks implementation status.
+
+---
+
+## ✅ IMPLEMENTED (v0.4.0)
 
 ### Core Structures
 
 | Component | Status | Location |
 |-----------|--------|----------|
-| 16 phonemes | ✅ | `mapping.py` |
+| 16 wheel phonemes | ✅ | `mapping.py` |
+| 6 spine phonemes | ✅ | `engine.py` |
 | 5 positions (hourglass) | ✅ | `engine.py` |
 | Mode enum (Masculine/Feminine) | ✅ | `engine.py` |
 | Pole enum (Min/Eq/Max) | ✅ | `engine.py` |
 | Scale enum (Onto/Phylo/Cosmo) | ✅ | `engine.py` |
 | Vowel → mode mapping | ✅ | `engine.py` |
+| T(16) = 136 relations | ✅ | `engine.py` |
+| 408 grammar (136 × 3) | ✅ | `engine.py` |
 
 ### Fibonacci/Rhythm
 
@@ -35,95 +43,64 @@ The phonemic engine now has a solid foundation. This document tracks what's impl
 
 | Component | Status | Location |
 |-----------|--------|----------|
-| TLA corpus loading | ✅ | `pyramid.py` |
-| Phoneme extraction | ✅ | `pyramid.py` |
-| Verb trajectory | ✅ | `pyramid.py` |
+| TLA corpus loading | ✅ | `corpus.py` |
+| Phoneme extraction | ✅ | `mapping.py` |
+| Verb trajectory | ✅ | `mapping.py` |
 | Line-by-line decoding | ✅ | `pyramid.py` |
+| Bidirectional decode | ✅ | `pyramid.py` |
+| **Layered decode (5 layers)** | ✅ | `pyramid.py` |
 
----
-
-## 🔲 REMAINING: Spine Phoneme Integration
-
-### The Key Discovery
-
-**Scales ARE phonemes:** x, d, k
+### Spine Phoneme Integration ✅
 
 | Scale | Spine Phoneme | Verb |
 |-------|---------------|------|
 | Ontogenic | k | CYCLE |
 | Phylogenic | d | DO |
-| Cosmogenic | x | ? (TBD) |
+| Cosmogenic | x | FUNDAMENT |
 
-### Required Changes
+Secondary spine: g (GROUND), f (BREATHE), h (SEE)
 
-1. **Update Scale enum** — link to spine phonemes:
-```python
-class Scale(Enum):
-    ONTOGENIC = ('k', 'CYCLE')      # Individual
-    PHYLOGENIC = ('d', 'DO')        # Species  
-    COSMOGENIC = ('x', 'FUNDAMENT') # Universal
-```
+### Wheel Phoneme Corrections ✅
 
-2. **Add spine phoneme constants**:
-```python
-SPINE_PHONEMES = ['x', 'd', 'k']  # Primary spine (by decan frequency)
-SPINE_SECONDARY = ['q', 'tj', 'g', 'f']  # Emphatic/palatal variants
-```
+- Aleph (A) distinct from ayin (a)
+- Pharyngeal H distinct from glottal h  
+- Yod (i) distinct from ayin
+- Palatalized dj on wheel, plain d on spine
+- All Unicode variants mapped
 
-3. **Update relation counting** — must include self-relations:
-```python
-def count_relations() -> int:
-    """T(16) = 136 including 16 self-relations."""
-    return triangular(16)  # 136, not 120
-```
+### Layered Decode ✅
 
-4. **Implement triangle relations** — each relation is wheel×wheel×spine:
-```python
-def get_relation(phoneme_a: str, phoneme_b: str, scale: Scale) -> Relation:
-    """
-    A grammatical relation is a triangle:
-    - Two wheel phonemes (vertices)
-    - One spine phoneme (the edge/scale)
-    """
-    return Relation(
-        wheel_a=phoneme_a,
-        wheel_b=phoneme_b,
-        spine=scale.value[0],  # x, d, or k
-        scale_verb=scale.value[1]
-    )
-```
+| Layer | Mode | Pole |
+|-------|------|------|
+| core | — | all equilibrium |
+| f1 | feminine | minima (alternating) |
+| f2 | feminine | maxima (alternating) |
+| m1 | masculine | minima (alternating) |
+| m2 | masculine | maxima (alternating) |
+
+Direction determines order:
+- **ASCEND** (L→R): core → f1 → f2 → m1 → m2
+- **PENETRATE** (R→L): core → m1 → m2 → f1 → f2
 
 ---
 
-## 🔲 REMAINING: Reversal Parser
+## Test Coverage
 
-### Shadow Grammar
-
-| Direction | Mode | Meaning |
-|-----------|------|---------|
-| Forward (R→L) | Constructive | Becoming, building |
-| Reverse (L→R) | Deconstructive | Undoing, dissolving |
-
-### Required Implementation
-
-```python
-def decode_shadow(phonemes: List[str]) -> DecodedSequence:
-    """
-    Reverse reading = undoing/return path.
-    Same phonemes, opposite direction.
-    """
-    return decode(phonemes[::-1])
-
-def decode_both(phonemes: List[str]) -> Tuple[DecodedSequence, DecodedSequence]:
-    """Return both forward (becoming) and reverse (undoing) readings."""
-    return (decode(phonemes), decode_shadow(phonemes))
-```
+| Test File | Status | Tests |
+|-----------|--------|-------|
+| test_mapping.py | ✅ | 42 |
+| test_engine.py | ✅ | 45 |
+| test_rhythm.py | ✅ | 38 |
+| test_integration.py | ✅ | 21 |
+| test_pyramid.py | ✅ | 18 |
+| test_spine.py | ✅ | 34 |
+| **TOTAL** | ✅ | **198** |
 
 ---
 
-## 🔲 REMAINING: Tidal N-Markers
+## 🔲 REMAINING
 
-### Bidirectional Flow
+### Tidal N-Markers
 
 N (Neith, water) governs direction within equilibrium:
 
@@ -132,78 +109,54 @@ N (Neith, water) governs direction within equilibrium:
 | Toward | Carry-in, receive | TITHE, BIRTH |
 | Away | Carry-out, release | FUNERAL, DEATH |
 
-### Required Implementation
-
 ```python
 class TidalDirection(Enum):
     TOWARD = "toward_source"
     AWAY = "from_source"
     NEUTRAL = "equilibrium"
-
-def detect_tidal_direction(context: List[str]) -> TidalDirection:
-    """Detect whether N-governed flow is toward or away."""
-    # Implementation based on surrounding phonemes
-    pass
 ```
 
----
+### Mode Detection from Context
 
-## 🔲 REMAINING: X-Verb Identification
+Currently mode is manually specified. Could auto-detect from:
+- Surrounding vowels
+- Grammatical markers
+- Position in Yuga sequence
 
-The cosmogenic spine phoneme **x** needs its verb identified.
+### Full Corpus Validation
 
-Candidates based on:
-- Uvular position (deepest throat)
-- Cosmogenic scale (most universal)
-- Decan clustering (year-boundary framing)
+Apply layered decode to full Unas corpus (not just Lines 1-9):
+- Validate Fibonacci breath patterns
+- Check for consistent verb distributions
+- Identify anomalies
 
-| Candidate | Rationale |
-|-----------|-----------|
-| FUNDAMENT | That which underlies all |
-| ORIGIN | Source beyond source |
-| VOID | Pre-manifestation |
-| HOLD | Frame that contains |
+### PyPI Publication
 
-**Method:** Extract x-contexts from decan names, analyze surrounding phonemes.
-
----
-
-## Test Coverage
-
-| Test File | Status | Coverage |
-|-----------|--------|----------|
-| test_mapping.py | ✅ | 100% |
-| test_engine.py | ✅ | ~90% (136/408 skipped) |
-| test_rhythm.py | ✅ | 100% |
-| test_integration.py | ✅ | ~90% (136/408 skipped) |
-| test_pyramid.py | ✅ | 100% |
-
-**Skipped tests:** 6 tests for 136/408 targets await spine integration.
+Package ready for publication:
+- ✅ pyproject.toml configured
+- ✅ README with usage examples
+- 🔲 Publish to PyPI
 
 ---
 
-## Completion Checklist
+## Completion Summary
 
 | Task | Status |
 |------|--------|
-| Spine phonemes as Scale values | 🔲 |
-| Self-relations in T(16) | 🔲 |
-| Triangle relation generator | 🔲 |
-| 136/408 tests passing | 🔲 |
-| Reversal parser | 🔲 |
+| Spine phonemes as Scale values | ✅ |
+| Self-relations in T(16) | ✅ |
+| Triangle relation generator | ✅ |
+| 136/408 tests passing | ✅ |
+| Bidirectional decode | ✅ |
+| Layered decode (5 layers) | ✅ |
+| X-verb identification | ✅ (FUNDAMENT) |
+| Wheel phoneme corrections | ✅ |
+| Unicode variant handling | ✅ |
+| Lines 1-9 decoded | ✅ |
 | Tidal direction markers | 🔲 |
-| X-verb identification | 🔲 |
-| Lines 2-9 rhythm validation | 🔲 |
-
----
-
-## Priority Order
-
-1. **Spine integration** — makes 136/408 tests pass
-2. **Reversal parser** — enables shadow readings
-3. **X-verb** — completes spine vocabulary
-4. **Tidal markers** — enables directional semantics
-5. **Full rhythm validation** — validates 9-line structure
+| Mode auto-detection | 🔲 |
+| Full corpus validation | 🔲 |
+| PyPI publication | 🔲 |
 
 ---
 
@@ -218,4 +171,4 @@ Independent Researcher
 
 ---
 
-*"The spine is the key. x, d, k complete the grammar."*
+*"The grammar speaks. 198 tests confirm it."*

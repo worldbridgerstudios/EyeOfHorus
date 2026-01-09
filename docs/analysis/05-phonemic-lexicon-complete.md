@@ -1,5 +1,13 @@
 # Complete Phonemic Lexicon: The Hourglass Grammar
 
+> **Note:** This document represents early discovery. The wheel/spine distinction and
+> exact verb assignments have since been refined. See:
+> - [Doc 10](10-spine-phonemes-as-scales.md) — Spine phonemes as scales
+> - [Doc 11](11-wheel-phoneme-correction.md) — Final wheel specification
+> - [Doc 12](12-layered-decode.md) — Five-layer decode implementation
+>
+> The hourglass *structure* (5 positions per phoneme) remains correct.
+
 ## Framework
 
 Each phoneme encodes:

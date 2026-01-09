@@ -1,7 +1,7 @@
 # 11. Wheel Phoneme Specification
 
 **Date:** 2025-01-09  
-**Status:** Specification complete, implementation pending
+**Status:** ✓ Implemented in v0.4.0
 
 ---
 
@@ -37,6 +37,8 @@ Phoneme:   n - w - s - sh - A - t - H - r - m - a - y - b - p - i - kh - dj
 
 ## Leiden → Wheel Mapping
 
+All Unicode variants now handled:
+
 ```python
 LEIDEN_TO_WHEEL = {
     # Position 1: n
@@ -49,29 +51,37 @@ LEIDEN_TO_WHEEL = {
     # Position 3: s
     's': 's',
     'z': 's',
+    'ś': 's',      # s with acute (variant)
     
     # Position 4: sh
     'š': 'sh',
     
-    # Position 5: A (aleph) — DISTINCT from ayin
-    'ꜣ': 'A',
+    # Position 5: A (aleph) — all Unicode variants
+    'ꜣ': 'A',      # U+A723 EGYPTOLOGICAL ALEF (primary)
+    'Ꜣ': 'A',      # U+A722 CAPITAL
+    'ʾ': 'A',      # U+02BE MODIFIER RIGHT HALF RING
+    'ʼ': 'A',      # U+02BC MODIFIER APOSTROPHE
+    'ˀ': 'A',      # U+02C0 MODIFIER GLOTTAL STOP
     
     # Position 6: t
     't': 't',
-    'ṯ': 't',
+    'ṯ': 't',      # t with line below
+    'ṭ': 't',      # t with dot below
     
     # Position 7: H (pharyngeal) — DISTINCT from glottal h
     'ḥ': 'H',
     
     # Position 8: r
     'r': 'r',
-    'l': 'r',
+    'l': 'r',      # l → r (late Egyptian)
     
     # Position 9: m
     'm': 'm',
     
-    # Position 10: a (ayin) — DISTINCT from aleph
-    'ꜥ': 'a',
+    # Position 10: a (ayin) — all Unicode variants
+    'ꜥ': 'a',      # U+A725 EGYPTOLOGICAL AIN (primary)
+    'Ꜥ': 'a',      # U+A724 CAPITAL
+    'ʿ': 'a',      # U+02BF MODIFIER LEFT HALF RING
     
     # Position 11: y
     'y': 'y',
@@ -82,18 +92,29 @@ LEIDEN_TO_WHEEL = {
     # Position 13: p
     'p': 'p',
     
-    # Position 14: i (yod) — DISTINCT from ayin
-    'ꞽ': 'i',
+    # Position 14: i (yod) — all Unicode variants
+    'ꞽ': 'i',      # U+A7BD GLOTTAL I (primary)
     'i': 'i',
+    'j': 'i',      # j often used for yod
+    'ı': 'i',      # U+0131 dotless i
+    'ỉ': 'i',      # U+1EC9 i with hook above
     
-    # Position 15: kh
+    # Position 15: kh (velar fricative)
     'ḫ': 'kh',
     'ẖ': 'kh',
+    'x': 'kh',     # x sometimes used for kh
     
-    # Position 16: dj (palatalized) — DISTINCT from plain d
+    # Position 16: dj (palatalized) — on wheel
     'ḏ': 'dj',
+    'ḍ': 'dj',     # d with dot below
 }
 ```
+
+Also handles:
+- `.PL`, `.DU`, `.SG` grammatical markers (stripped)
+- Combining diacritics U+032F, U+0331 (skipped)
+- Parenthetical content `(...)` (removed)
+- Suffix markers `=sn`, `=f` etc (removed)
 
 ---
 
@@ -106,8 +127,6 @@ These phonemes are spine-only — they frame the wheel but don't rotate:
 | x | — | Cosmogenic | FUNDAMENT |
 | d | d | Phylogenic | DO |
 | k | k | Ontogenic | CYCLE |
-| q | q | (secondary) | — |
-| tj | ṯ | (secondary) | — |
 | g | g | (secondary) | GROUND |
 | f | f | (secondary) | BREATHE |
 | h | h | (secondary) | SEE |
@@ -116,45 +135,40 @@ These phonemes are spine-only — they frame the wheel but don't rotate:
 
 ---
 
-## Verb Assignments
+## Complete Verb Assignments
 
-### Confirmed (from existing work)
+All 16 wheel positions now have verbs:
 
-| Pos | Phoneme | Deity | Verb |
-|-----|---------|-------|------|
-| 1 | n | Neith | WEAVE |
-| 2 | w | Wadjet | PROTECT |
-| 3 | s | Serpent | BIND |
-| 4 | sh | Shu | LIFT |
-| 6 | t | Thoth | MEASURE |
-| 8 | r | Ra | ILLUMINE |
-| 9 | m | Ma'at | WEIGH |
-| 10 | a | Atum | SOURCE |
-| 12 | b | Ba | BIRTH |
-| 13 | p | Ptah | FORM |
-| 15 | kh | Khnum | MOLD |
-
-### Pending Assignment
-
-| Pos | Phoneme | Candidates | Notes |
-|-----|---------|------------|-------|
-| 5 | A (aleph) | INITIATE, MARK, HALT | Glottal stop — beginning/boundary |
-| 7 | H (pharyngeal) | PERCEIVE, WITNESS | Deeper than r, seeing inward |
-| 11 | y | GLIDE, YIELD | Transition, flow |
-| 14 | i (yod) | CARRY, INTEND | Semi-vowel, carrier |
-| 16 | dj | JUDGE, DECREE | Palatalized emphasis |
+| Pos | Phoneme | Deity | Verb | Hourglass |
+|-----|---------|-------|------|-----------|
+| 1 | n | Neith | WEAVE | SEVER ↔ CONNECT ↔ FUSE |
+| 2 | w | Wadjet | PROTECT | EXPOSE ↔ SHELTER ↔ ENCLOSE |
+| 3 | s | Serpent | BIND | LOOSE ↔ COMMIT ↔ CONSTRICT |
+| 4 | sh | Shu | LIFT | PRESS ↔ SUPPORT ↔ SOAR |
+| 5 | A | — | OPEN | SEAL ↔ ADMIT ↔ GAPE |
+| 6 | t | Thoth | MEASURE | CHAOS ↔ ATTEND ↔ RIGIDIFY |
+| 7 | H | — | PIERCE | DEFLECT ↔ PERCEIVE ↔ IMPALE |
+| 8 | r | Ra | ILLUMINE | OBSCURE ↔ REVEAL ↔ BLIND |
+| 9 | m | Ma'at | WEIGH | DIMINISH ↔ COMPASSION ↔ AMPLIFY |
+| 10 | a | Atum | SOURCE | VOID ↔ RECEPTIVE ↔ FULLNESS |
+| 11 | y | — | YEARN | REPEL ↔ YIELD ↔ CRAVE |
+| 12 | b | Ba | BIRTH | BLOCK ↔ BEAR ↔ BURST |
+| 13 | p | Ptah | FORM | SCATTER ↔ TEND ↔ FIX |
+| 14 | i | — | POINT | BLUR ↔ INDICATE ↔ TARGET |
+| 15 | kh | Khnum | MOLD | SHATTER ↔ SURRENDER ↔ PETRIFY |
+| 16 | dj | — | JUDGE | CONFUSE ↔ DISCERN ↔ CONDEMN |
 
 ---
 
 ## Implementation Checklist
 
-1. ☐ Resolve verb assignments for positions 5, 7, 11, 14, 16
-2. ☐ Update `WHEEL_16` in mapping.py
-3. ☐ Update `LEIDEN_TO_WHEEL` with correct distinctions
-4. ☐ Update `WHEEL_VERBS` with all 16 verbs
-5. ☐ Update hourglass definitions in engine.py
-6. ☐ Re-run test suite
-7. ☐ Re-translate Lines 1-9
+1. ✓ Resolved verb assignments for positions 5, 7, 11, 14, 16
+2. ✓ Updated `WHEEL_16` in mapping.py
+3. ✓ Updated `LEIDEN_TO_WHEEL` with correct distinctions + Unicode variants
+4. ✓ Updated `WHEEL_VERBS` with all 16 verbs
+5. ✓ Updated hourglass definitions in engine.py (wheel + spine separate)
+6. ✓ All 198 tests passing
+7. ✓ Re-translated Lines 1-9 (see doc 12 for layered decode)
 
 ---
 
@@ -162,9 +176,20 @@ These phonemes are spine-only — they frame the wheel but don't rotate:
 
 With correct mapping:
 ```
-ꞽ → i (position 14) → [VERB-14]
+ꞽ → i (position 14) → POINT
 ꜥ → a (position 10) → SOURCE
 b → b (position 12) → BIRTH
 ```
 
 Three distinct phonemes, three distinct verbs.
+
+---
+
+## Author
+
+Nicholas David Brown  
+Independent Researcher
+
+---
+
+*"The wheel is now whole. 16 positions, 16 verbs, no conflation."*
