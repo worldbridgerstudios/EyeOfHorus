@@ -119,26 +119,25 @@ class TestBidirectionalDecode:
 
 
 class TestLine1Specifics:
-    """Tests for Line 1 (the seed line with 23 phonemes)."""
+    """Tests for Line 1 (the seed line)."""
     
     def test_line1_phoneme_count(self):
-        """Line 1 has 23 phonemes."""
+        """Line 1 has 24 phonemes (with corrected aleph mapping)."""
         lines, _, _ = decode_bidirectional(1, 1, verbose=False)
-        assert len(lines[0].phonemes) == 23
+        assert len(lines[0].phonemes) == 24
     
-    def test_line1_ends_double_illumine(self):
-        """Line 1 forward ends with ILLUMINE → ILLUMINE."""
+    def test_line1_ends_illumine_illumine_open(self):
+        """Line 1 forward ends with ILLUMINE → ILLUMINE → OPEN (ꞽr rʾ)."""
         lines, _, _ = decode_bidirectional(1, 1, verbose=False)
         verbs = lines[0].forward_verbs
-        assert verbs[-1] == 'ILLUMINE'
-        assert verbs[-2] == 'ILLUMINE'
+        # Two r's (eye + mouth) followed by aleph
+        assert verbs[-3:] == ['ILLUMINE', 'ILLUMINE', 'OPEN']
     
-    def test_line1_reverse_starts_double_illumine(self):
-        """Line 1 reverse starts with ILLUMINE → ILLUMINE."""
+    def test_line1_reverse_starts_open_illumine_illumine(self):
+        """Line 1 reverse starts with OPEN → ILLUMINE → ILLUMINE."""
         lines, _, _ = decode_bidirectional(1, 1, verbose=False)
         verbs = lines[0].reverse_verbs
-        assert verbs[0] == 'ILLUMINE'
-        assert verbs[1] == 'ILLUMINE'
+        assert verbs[:3] == ['OPEN', 'ILLUMINE', 'ILLUMINE']
 
 
 class TestLine8Specifics:

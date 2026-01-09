@@ -68,6 +68,7 @@ SPINE_VERBS = {
 }
 
 # Leiden Unified Transliteration → Wheel mapping
+# Includes all known Unicode variants for each phoneme
 LEIDEN_TO_WHEEL = {
     # Position 1: n
     'n': 'n',
@@ -79,29 +80,37 @@ LEIDEN_TO_WHEEL = {
     # Position 3: s
     's': 's',
     'z': 's',
+    'ś': 's',      # s with acute (variant)
     
     # Position 4: sh
     'š': 'sh',
     
-    # Position 5: A (aleph) — DISTINCT from ayin
-    'ꜣ': 'A',
+    # Position 5: A (aleph) — all Unicode variants
+    'ꜣ': 'A',      # U+A723 EGYPTOLOGICAL ALEF (primary)
+    'Ꜣ': 'A',      # U+A722 CAPITAL
+    'ʾ': 'A',      # U+02BE MODIFIER RIGHT HALF RING
+    'ʼ': 'A',      # U+02BC MODIFIER APOSTROPHE
+    'ˀ': 'A',      # U+02C0 MODIFIER GLOTTAL STOP
     
     # Position 6: t
     't': 't',
-    'ṯ': 't',
+    'ṯ': 't',      # U+1E6F t with line below
+    'ṭ': 't',      # U+1E6D t with dot below
     
     # Position 7: H (pharyngeal) — DISTINCT from glottal h
-    'ḥ': 'H',
+    'ḥ': 'H',      # U+1E25 h with dot below
     
     # Position 8: r
     'r': 'r',
-    'l': 'r',
+    'l': 'r',      # l → r (late Egyptian)
     
     # Position 9: m
     'm': 'm',
     
-    # Position 10: a (ayin) — DISTINCT from aleph
-    'ꜥ': 'a',
+    # Position 10: a (ayin) — all Unicode variants
+    'ꜥ': 'a',      # U+A725 EGYPTOLOGICAL AIN (primary)
+    'Ꜥ': 'a',      # U+A724 CAPITAL
+    'ʿ': 'a',      # U+02BF MODIFIER LEFT HALF RING
     
     # Position 11: y
     'y': 'y',
@@ -112,24 +121,29 @@ LEIDEN_TO_WHEEL = {
     # Position 13: p
     'p': 'p',
     
-    # Position 14: i (yod) — DISTINCT from ayin
-    'ꞽ': 'i',
+    # Position 14: i (yod) — all Unicode variants
+    'ꞽ': 'i',      # U+A7BD GLOTTAL I (primary)
     'i': 'i',
+    'j': 'i',      # j often used for yod
+    'ı': 'i',      # U+0131 dotless i
+    'ỉ': 'i',      # U+1EC9 i with hook above
     
-    # Position 15: kh
-    'ḫ': 'kh',
-    'ẖ': 'kh',
+    # Position 15: kh (velar fricative)
+    'ḫ': 'kh',     # U+1E2B h with breve below
+    'ẖ': 'kh',     # U+1E96 h with line below
+    'x': 'kh',     # x sometimes used for kh
     
     # Position 16: dj (palatalized) — on wheel
-    'ḏ': 'dj',
+    'ḏ': 'dj',     # U+1E0F d with line below
+    'ḍ': 'dj',     # U+1E0D d with dot below
     
-    # Spine phonemes (map but flag as spine)
-    'd': 'd',   # Plain d is spine
-    'k': 'k',   # Plain k is spine
-    'q': 'k',   # Emphatic k → k (spine)
-    'g': 'g',   # Spine
-    'f': 'f',   # Spine
-    'h': 'h',   # Glottal h is spine (distinct from pharyngeal H)
+    # SPINE phonemes (map but flag as spine)
+    'd': 'd',      # Plain d is spine
+    'k': 'k',      # Plain k is spine
+    'q': 'k',      # Emphatic k → k (spine)
+    'g': 'g',      # Spine
+    'f': 'f',      # Spine
+    'h': 'h',      # Glottal h is spine (distinct from pharyngeal H)
 }
 
 # All verbs (wheel + spine)
@@ -143,6 +157,12 @@ VOWEL_MARKERS = {
     'o': 'masc',   # → masculine
     'u': 'masc',   # → masculine
     'y': 'fem',    # → feminine
+}
+
+# Characters to skip (combining diacritics, grammatical markers handled in cleaning)
+SKIP_CHARS = {
+    '\u032f',  # U+032F COMBINING INVERTED BREVE BELOW
+    '\u0331',  # U+0331 COMBINING MACRON BELOW
 }
 
 
@@ -161,8 +181,10 @@ def leiden_to_wheel(translit: str, keep_words: bool = False) -> List[str]:
         List of phonemes (wheel + spine)
     """
     # Clean: remove parentheses content, =suffixes, punctuation, numbers
+    # Also remove grammatical markers like .PL (plural) and .DU (dual)
     clean = re.sub(r'\([^)]*\)', '', translit)  # remove (...)
     clean = re.sub(r'=[a-zꞽꜣꜥ]+', '', clean)    # remove =sn, =f etc  
+    clean = re.sub(r'\.(PL|DU|SG)', '', clean)  # remove .PL, .DU, .SG markers
     clean = re.sub(r'[.:\-+~0-9/!]', '', clean)  # remove punctuation
     clean = re.sub(r'[𓍹𓍺]', '', clean)          # remove cartouche markers
     clean = clean.lower().strip()
@@ -183,7 +205,8 @@ def _convert_word(word: str) -> List[str]:
     """Convert a single word to phonemes."""
     result = []
     for char in word:
-        if char in ' ̯̱':
+        # Skip combining diacritics and whitespace
+        if char in SKIP_CHARS or char in ' ':
             continue
         if char in LEIDEN_TO_WHEEL:
             result.append(LEIDEN_TO_WHEEL[char])
