@@ -1,56 +1,14 @@
-# Eye of Horus 𓂀
+# Eye of Horus
 
-Read ancient Egyptian through the 16-position phonemic wheel.
+A phonemic engine for reading ancient Egyptian through the 16-position wheel.
 
-## Architecture
-
-**The 408 Grammar:** T(16) = 136 wheel relations × 3 spine axes = 408
-
-### The Wheel (16 Phonemes)
-
-| Pos | Phoneme | Leiden | Verb     | Deity   |
-|-----|---------|--------|----------|---------|
-| 1   | n       | n      | WEAVE    | Neith   |
-| 2   | w       | w      | PROTECT  | Wadjet  |
-| 3   | s       | s,z    | BIND     | Serpent |
-| 4   | sh      | š      | LIFT     | Shu     |
-| 5   | A       | ꜣ      | OPEN     | —       |
-| 6   | t       | t,ṯ    | MEASURE  | Thoth   |
-| 7   | H       | ḥ      | PIERCE   | —       |
-| 8   | r       | r      | ILLUMINE | Ra      |
-| 9   | m       | m      | WEIGH    | Ma'at   |
-| 10  | a       | ꜥ      | SOURCE   | Atum    |
-| 11  | y       | y      | YEARN    | —       |
-| 12  | b       | b      | BIRTH    | Ba      |
-| 13  | p       | p      | FORM     | Ptah    |
-| 14  | i       | ꞽ,i    | POINT    | —       |
-| 15  | kh      | ḫ,ẖ    | MOLD     | Khnum   |
-| 16  | dj      | ḏ      | JUDGE    | —       |
-
-### The Spine (3 Scale Phonemes)
-
-| Phoneme | Verb      | Scale      |
-|---------|-----------|------------|
-| k       | CYCLE     | Ontogenic  |
-| d       | DO        | Phylogenic |
-| x       | FUNDAMENT | Cosmogenic |
-
-### The Hourglass (5 Positions per Phoneme)
+## The 408 Grammar
 
 ```
-        Masc Max
-           △
-          / \
-         / EQ \   ← shared equilibrium
-        /_____\
-        Fem Max
-           ▽
+T(16) = 136 wheel relations × 3 spine axes = 408
 ```
 
-Each phoneme has 5 semantic positions:
-- **equilibrium** (shared center)
-- **min_masc** / **max_masc** (masculine poles)
-- **min_fem** / **max_fem** (feminine poles)
+Sixteen phonemes on a wheel. Three scales on a spine. Five layers per reading. Every Egyptian utterance decoded through directed semantic relations.
 
 ## Installation
 
@@ -58,150 +16,209 @@ Each phoneme has 5 semantic positions:
 pip install eye-of-horus
 ```
 
-For corpus access (12,773 Earlier Egyptian sentences):
-```bash
-pip install eye-of-horus[corpus]
-```
-
-## Usage
-
-### Basic Decoding
+## Quick Start
 
 ```python
-from eye_of_horus import leiden_to_wheel, phonemes_to_verbs
-from eye_of_horus.mapping import wheel_trajectory
+from eye_of_horus import load_pyramid_translations
 
-# Convert transliteration to phonemes
-phonemes = leiden_to_wheel("ꜥnḫ")  # ankh - life
-# ['a', 'n', 'kh']
+# 1,316 Pyramid Text sentences, pre-translated
+corpus = load_pyramid_translations()
 
-# Get verbs
-verbs = phonemes_to_verbs(phonemes)
-# ['SOURCE', 'WEAVE', 'MOLD']
-
-# Or get trajectory directly
-trajectory = wheel_trajectory("ꜥnḫ")
-# "SOURCE → WEAVE → MOLD"
+for entry in corpus[:3]:
+    print(entry['transliteration'])
+    print(entry['ascend'])      # Rising (L→R)
+    print(entry['penetrate'])   # Entering (R→L)
+    print()
 ```
 
-### Bidirectional Reading
+## The Wheel (16 phonemes)
+
+Each phoneme maps 1:1 to a deity, with masculine and feminine equilibrium verbs representing antithetic poles of the same semantic axis:
+
+| Pos | Ph | Deity | F equilibrium | M equilibrium |
+|-----|-----|-------|---------------|---------------|
+| 1 | n | Neith | WEAVE | INTEGRATE |
+| 2 | w | Wadjet | FLOW | RADIATE |
+| 3 | s | Sekhmet | COCOON | EMERGE |
+| 4 | sh | Shu | ALIGN | DIRECT |
+| 5 | A | Atum | TEND | LEAD |
+| 6 | t | Seshat | ETCH | READ |
+| 7 | H | Horus | INTERPRET | EXPRESS |
+| 8 | r | Ra | BASK | SHINE |
+| 9 | m | Ma'at | TRUST | TRUE |
+| 10 | a | Anubis | ALLOW | HONOUR |
+| 11 | y | Isis | RESTORE | DEVOTE |
+| 12 | b | Bes | CULTIVATE | RECEIVE |
+| 13 | p | Ptah | GATHER | STORE |
+| 14 | i | Ihy | PROTECT | BESTOW |
+| 15 | kh | Khnum | CAPACITY | EMBODY |
+| 16 | dj | Thoth | ACT | DISCERN |
+
+## The Spine (3 scales)
+
+Spine phonemes operate across temporal scales, outside the wheel:
+
+| Phoneme | Verb | Scale |
+|---------|------|-------|
+| k | CYCLE | Ontogenic (individual lifecycle) |
+| d | DO | Phylogenic (species/lineage) |
+| x | FUNDAMENT | Cosmogenic (universal) |
+
+Secondary spine: g (GROUND), f (BREATHE), h (SEE).
+
+**Critical:** Plain d and k are spine. The wheel has dj (palatalized), not plain d.
+
+## The Hourglass (5 positions)
+
+Each phoneme occupies five positions in an hourglass structure:
+
+```
+          max_masc
+             △
+            /|\
+           / | \
+          / min_m \
+         /___△___\
+              |
+        eq_m ─┼─ eq_f
+              |
+         \___▽___/
+          \ max_f /
+           \ | /
+            \|/
+             ▽
+          min_fem
+```
+
+## Five-Layer Reading
+
+Every phoneme sequence generates five parallel interpretations:
+
+| Layer | Mode | Pole | Pattern |
+|-------|------|------|---------|
+| core | — | equilibrium | all eq |
+| f1 | feminine | min_fem | (pole)(eq)(pole)(eq)... |
+| f2 | feminine | max_fem | (pole)(eq)(pole)(eq)... |
+| m1 | masculine | min_masc | (pole)(eq)(pole)(eq)... |
+| m2 | masculine | max_masc | (pole)(eq)(pole)(eq)... |
+
+The alternation creates rhythmic pulsing: reach to pole, return to center.
+
+## Bidirectional Reading
+
+Direction determines layer order:
+
+| Direction | Movement | Layer Order |
+|-----------|----------|-------------|
+| **ASCEND** (L→R) | Rising, feminine leads | core → f1 → f2 → m1 → m2 |
+| **PENETRATE** (R→L) | Entering, masculine leads | core → m1 → m2 → f1 → f2 |
 
 ```python
 from eye_of_horus import decode_bidirectional
 
-# Decode Pyramid Text lines 1-9 (Fibonacci breath block)
-lines, ascend, penetrate = decode_bidirectional(1, 9)
-
-# ascend (L→R): cohering, unifying — becoming
-# penetrate (R→L): decohering, dissolving — undoing
+results, ascend, penetrate = decode_bidirectional(1, 9, readable=True)
+print(ascend)
 ```
 
-### Layered Decode (5 Simultaneous Readings)
+## Total Decode Space
+
+```
+5 layers × 2 directions = 10 simultaneous readings
+408 relations × 5 layers = 2,040 meaning-positions
+```
+
+## Directed Pairs
+
+The 136 wheel edges capture Egyptian vocabulary semantics:
 
 ```python
-from eye_of_horus import decode_layered
+from eye_of_horus import get_edge_signature
 
-# Five parallel layers with pole alternation
-ascend, penetrate = decode_layered(1, 9)
-
-# ASCEND order: core → f1 → f2 → m1 → m2
-# PENETRATE order: core → m1 → m2 → f1 → f2
-
-# Each layer alternates: (pole)(eq)(pole)(eq)...
-# - core: all equilibrium
-# - f1: min_fem alternating with eq
-# - f2: max_fem alternating with eq
-# - m1: min_masc alternating with eq
-# - m2: max_masc alternating with eq
+edge = get_edge_signature('a', 'n')  # ankh
+print(edge['signatures']['life']['ratio'])  # 11.08x baseline
 ```
 
-### Corpus Search
+| Edge | Verbs | Semantic field | Egyptian |
+|------|-------|----------------|----------|
+| p→t | STORE→READ | sky 13x | pt |
+| a→n | HONOUR→INTEGRATE | life 11x | ankh |
+| m→w | TRUE→RADIATE | water 10x | mw |
+| dj→m | DISCERN→TRUE | speech 8x | djed-medu |
+
+## Fibonacci Breath
+
+The Pyramid Texts' opening follows a 1+2+3+2+1 = 9 structure:
+
+```
+        1         ← Line 1: SEED
+       / \
+      2   2       ← Lines 2-3: Division
+     / \ / \
+    3   3   3     ← Lines 4-5-6: Peak
+     \ / \ /
+      2   2       ← Lines 7-8: Return
+       \ /
+        1         ← Line 9: Unity
+```
+
+The hourglass rotated 90°—same architecture at text level.
+
+## Semantic Network
+
+240 directed edges validated against 12,773 TLA sentences:
 
 ```python
-from eye_of_horus import load_tla_corpus, search_corpus
+from eye_of_horus import find_edges_by_signature
 
-# Load full corpus
-corpus = load_tla_corpus()
-print(f"Loaded {len(corpus)} sentences")
-
-# Search by pattern
-results = search_corpus("ankh", corpus)
+# Find all edges associated with "life" (>5x baseline)
+for edge in find_edges_by_signature('life', 5.0):
+    print(f"{edge['edge']} {edge['verbs']} — {edge['ratio']}x")
 ```
 
-### 408 Grammar Access
+## Corpus
+
+| Dataset | Sentences | Source |
+|---------|-----------|--------|
+| Pyramid Texts | 1,316 | Old Kingdom walls (~2300 BCE) |
+| Semantic Network | 240 edges | Derived from TLA corpus |
+
+## API Reference
 
 ```python
 from eye_of_horus import (
+    # Mapping
+    leiden_to_wheel,
+    phonemes_to_verbs,
+    WHEEL_16,
+    WHEEL_VERBS,
+    
+    # Pyramid Texts
+    load_pyramid_translations,
+    decode_bidirectional,
+    decode_layered,
+    
+    # Semantic Network
+    load_semantic_network,
+    get_edge_signature,
+    find_edges_by_signature,
+    
+    # Engine
+    Mode, Pole, Scale,
+    get_hourglass,
     triangular,
-    count_relations,
     total_grammar,
-    get_all_triangular_relations,
 )
-
-# T(16) = 136
-assert triangular(16) == 136
-
-# 136 wheel relations × 3 scales = 408
-assert total_grammar() == 408
-
-# Get all triangular relations
-relations = get_all_triangular_relations()
-for rel in relations[:5]:
-    print(f"{rel.scale.name}: {rel.relation.forward}")
 ```
 
-## Key Concepts
+## License
 
-### Phoneme Classification
-
-```python
-from eye_of_horus import is_wheel_phoneme, is_spine_phoneme, classify_phoneme
-
-is_wheel_phoneme('r')   # True - on the 16-position wheel
-is_spine_phoneme('d')   # True - plain d is spine (DO)
-is_wheel_phoneme('dj')  # True - palatalized dj is wheel (JUDGE)
-
-classify_phoneme('k')   # 'spine-primary'
-classify_phoneme('n')   # 'wheel'
-```
-
-### Hourglass Semantics
-
-```python
-from eye_of_horus import get_hourglass, Mode, Pole
-
-hg = get_hourglass('r')  # Ra - ILLUMINE
-
-# Get meaning at specific position
-hg.get_meaning(Mode.MASCULINE, Pole.EQUILIBRIUM)  # 'ILLUMINE'
-hg.get_meaning(Mode.FEMININE, Pole.EQUILIBRIUM)   # 'REVEAL'
-hg.get_meaning(Mode.MASCULINE, Pole.MINIMA)       # 'OBSCURE'
-hg.get_meaning(Mode.MASCULINE, Pole.MAXIMA)       # 'BLIND'
-hg.get_meaning(Mode.FEMININE, Pole.MINIMA)        # 'CONCEAL'
-hg.get_meaning(Mode.FEMININE, Pole.MAXIMA)        # 'EXPOSE'
-```
-
-## Data Source
-
-The corpus comes from the [Thesaurus Linguae Aegyptiae](https://thesaurus-linguae-aegyptiae.de), 
-containing 12,773 intact Earlier Egyptian sentences (Old Kingdom through Middle Kingdom).
-
-Licensed CC BY-SA 4.0.
-
-## Documentation
-
-See `docs/analysis/` for detailed architectural documentation:
-- `00-INDEX.md` - Document index
-- `06-408-grammar-architecture.md` - The 408 grammar mathematics
-- `10-spine-phonemes-as-scales.md` - Spine phonemes as reading scales
-- `11-wheel-phoneme-correction.md` - True 16-phoneme wheel specification
-- `12-layered-decode.md` - Five simultaneous readings
+MIT
 
 ## Author
 
 Nicholas David Brown  
 Independent Researcher
 
-## License
+---
 
-MIT
+*The wheel rotates. The spine holds. The layers speak simultaneously.*

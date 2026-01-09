@@ -773,3 +773,101 @@ def print_layered(ascend: LayeredReading, penetrate: LayeredReading, start: int,
     
     print("\n[F2 - max_fem]")
     print(build_paragraph(penetrate.f2, "penetrate"))
+
+
+# Pyramid translations cache
+_pyramid_translations: list = None
+
+
+def load_pyramid_translations() -> list:
+    """
+    Load pre-computed Pyramid Text translations.
+    
+    Returns list of dicts, each containing:
+        - id: sequential number (1-based)
+        - transliteration: original Leiden transliteration
+        - phonemes: list of wheel/spine phonemes
+        - verbs: list of verb names
+        - trajectory: condensed verb path (first 10)
+        - ascend: prose translation (L→R, rising)
+        - penetrate: prose translation (R→L, entering)
+        - period: "Old Kingdom" etc.
+        - date_range: e.g., "-2345 to -2315 BCE"
+    
+    Example:
+        >>> corpus = load_pyramid_translations()
+        >>> print(corpus[0]['ascend'])
+        'Emerge bestow shine; radiate integrate and bestow...'
+    """
+    global _pyramid_translations
+    
+    if _pyramid_translations is not None:
+        return _pyramid_translations
+    
+    import json
+    from pathlib import Path
+    
+    path = Path(__file__).parent / 'data' / 'pyramid_texts_translated.json'
+    with open(path, 'r', encoding='utf-8') as f:
+        _pyramid_translations = json.load(f)
+    
+    return _pyramid_translations
+
+
+def translate(transliteration: str, direction: str = "ascend") -> str:
+    """
+    Translate Egyptian transliteration to readable English prose.
+    
+    Args:
+        transliteration: Leiden transliteration (e.g., "ꜥnḫ wḏꜣ snb")
+        direction: "ascend" (L→R, rising) or "penetrate" (R→L, entering)
+    
+    Returns:
+        Flowing English prose interpretation
+    
+    Example:
+        >>> from eye_of_horus import translate
+        >>> translate("(w)sꞽr wnꞽs ꞽbꜣ")
+        'Emerge bestow shine; radiate integrate and bestow.\nEmerge bestow receive and lead.'
+        
+        >>> translate("ꜥnḫ wḏꜣ snb", direction="penetrate")
+        'Receive integrate emerge; radiate discern and lead.\nHonour and integrate.'
+    """
+    from .mapping import leiden_to_wheel, phonemes_to_verbs
+    
+    phonemes = leiden_to_wheel(transliteration)
+    
+    if direction == "penetrate":
+        phonemes = list(reversed(phonemes))
+    
+    verbs = phonemes_to_verbs(phonemes)
+    return build_paragraph(verbs, direction)
+
+
+def translate_bidirectional(transliteration: str) -> dict:
+    """
+    Translate in both directions simultaneously.
+    
+    Args:
+        transliteration: Leiden transliteration
+    
+    Returns:
+        Dict with 'ascend', 'penetrate', 'phonemes', 'verbs'
+    
+    Example:
+        >>> result = translate_bidirectional("ꜥnḫ wḏꜣ snb")
+        >>> print(result['ascend'])
+        >>> print(result['penetrate'])
+    """
+    from .mapping import leiden_to_wheel, phonemes_to_verbs
+    
+    phonemes = leiden_to_wheel(transliteration)
+    verbs = phonemes_to_verbs(phonemes)
+    
+    return {
+        'phonemes': phonemes,
+        'verbs': verbs,
+        'trajectory': ' → '.join(verbs),
+        'ascend': build_paragraph(verbs, "ascend"),
+        'penetrate': build_paragraph(list(reversed(verbs)), "penetrate"),
+    }

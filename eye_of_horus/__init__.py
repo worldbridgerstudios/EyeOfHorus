@@ -3,7 +3,7 @@
 #
 # Engine: 16 wheel phonemes × 3 spine axes = 408 grammar (T(16) × 3)
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 # Core mapping (Leiden → wheel phonemes)
 from .mapping import (
@@ -74,6 +74,9 @@ from .validation import (
 # Pyramid Texts
 from .pyramid import (
     get_pyramid_texts,
+    load_pyramid_translations,
+    translate,
+    translate_bidirectional,
     decode,
     decode_range,
     decode_bidirectional,
