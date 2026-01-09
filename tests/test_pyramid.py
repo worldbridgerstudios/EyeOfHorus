@@ -145,14 +145,13 @@ class TestLine8Specifics:
     """Tests for Line 8 (has spine phonemes d and k)."""
     
     def test_line8_has_spine_phonemes(self):
-        """Line 8 contains d and k (spine phonemes)."""
+        """Line 8 contains spine phonemes (d, k) and wheel phoneme dj."""
         lines, _, _ = decode_bidirectional(8, 8, verbose=False)
-        phonemes = lines[0].phonemes
-        # Line 8: rḏ.t qbḥ(.w) → r, d, t, k, b, h
-        # Based on output: ILLUMINE → DO → MEASURE → CYCLE → BIRTH → SEE
         verbs = lines[0].forward_verbs
-        assert 'DO' in verbs  # d phoneme
-        assert 'CYCLE' in verbs  # k phoneme
+        # Line 8: rḏ.t qbḥ(.w) → r, dj, t, k, b, H
+        # dj → JUDGE, k → CYCLE (spine)
+        assert 'JUDGE' in verbs  # dj phoneme (wheel)
+        assert 'CYCLE' in verbs  # k phoneme (spine)
 
 
 class TestParagraphBuilding:

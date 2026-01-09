@@ -69,9 +69,9 @@ class TestPhonemeCount:
             assert p in PHONEME_HOURGLASSES
             assert get_hourglass(p) is not None
     
-    def test_phoneme_order_alphabetical_ish(self):
-        """Phoneme order is defined and stable."""
-        expected = ['a', 'b', 'd', 'f', 'g', 'h', 'k', 'kh', 'm', 'n', 'p', 'r', 's', 'sh', 't', 'w']
+    def test_phoneme_order_matches_wheel(self):
+        """Phoneme order matches the wheel specification."""
+        expected = ['n', 'w', 's', 'sh', 'A', 't', 'H', 'r', 'm', 'a', 'y', 'b', 'p', 'i', 'kh', 'dj']
         assert PHONEME_ORDER == expected
 
 

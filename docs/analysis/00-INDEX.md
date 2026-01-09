@@ -44,6 +44,14 @@ These documents record the progressive discoveries made during the development o
 
 ---
 
+### Correction: Wheel Integrity
+
+| # | Document | Summary |
+|---|----------|---------|
+| 11 | [Wheel Phoneme Specification](11-wheel-phoneme-correction.md) | True wheel: n-w-s-sh-A-t-H-r-m-a-y-b-p-i-kh-dj. Leiden mappings. 5 verbs pending. |
+
+---
+
 ## Key Formulas
 
 ```
@@ -60,8 +68,10 @@ T(16) = 136                    # Triangular number, unique wheel relations
 
 | System | Phonemes | Function | Temporal Layer |
 |--------|----------|----------|----------------|
-| **Wheel** | 16 | Rotating, transmissible | Post-merger (~600 BCE) |
-| **Spine** | x, d, k (primary) | Fixed frame, scales | Pre-merger (~2000 BCE) |
+| **Wheel** | 16 (n-w-s-sh-A-t-H-r-m-a-y-b-p-i-kh-dj) | Rotating, transmissible | Post-merger (~600 BCE) |
+| **Spine** | x, d, k (primary); q, tj, g, f (secondary) | Fixed frame, scales | Pre-merger (~2000 BCE) |
+
+**Critical distinction:** Plain **d** and **k** are spine phonemes. The wheel has **dj** (palatalized) not plain d.
 
 ---
 

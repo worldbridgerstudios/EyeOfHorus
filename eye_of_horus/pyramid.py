@@ -147,34 +147,73 @@ def decode_bidirectional(
 
 def build_paragraph(verbs: List[str], mode: str) -> str:
     """
-    Build a flowing paragraph from verb sequence.
+    Build flowing prose from verb sequence.
     
-    Joins verbs into natural-ish prose. Mode affects framing.
+    Each clause becomes a sentence on its own line.
+    Verbs are woven with natural connectives.
     """
     if not verbs:
         return ""
     
-    # Group into clauses (chunks of ~5-7 verbs)
+    # Group into clauses (chunks of ~5-7 verbs for rhythm)
     clause_size = 6
-    clauses = []
+    sentences = []
     
     for i in range(0, len(verbs), clause_size):
         chunk = verbs[i:i+clause_size]
-        clause = '-'.join(v.lower() for v in chunk)
-        clauses.append(clause)
+        sentence = weave_clause(chunk)
+        sentences.append(sentence)
     
-    # Join clauses with punctuation
-    if len(clauses) == 1:
-        return clauses[0].capitalize() + "."
+    # Each sentence on its own line
+    return '\n'.join(sentences)
+
+
+def weave_clause(verbs: List[str]) -> str:
+    """
+    Weave a list of verbs into a prose sentence.
     
-    # First clause capitalized, rest joined with commas, last with period
-    result = clauses[0].capitalize()
-    for clause in clauses[1:-1]:
-        result += ", " + clause
-    if len(clauses) > 1:
-        result += "; " + clauses[-1] + "."
+    Adds natural connectives and flow.
+    """
+    if not verbs:
+        return ""
     
-    return result
+    if len(verbs) == 1:
+        return verbs[0].capitalize() + "."
+    
+    # Build sentence with natural rhythm
+    # Pattern: VERB, VERB and VERB; VERB to VERB, VERB.
+    parts = []
+    i = 0
+    while i < len(verbs):
+        v = verbs[i].lower()
+        
+        # Decide connective based on position
+        if i == 0:
+            parts.append(v.capitalize())
+        elif i == len(verbs) - 1:
+            # Last verb - use "and" or "to"
+            prev = verbs[i-1].lower()
+            if prev in ['bind', 'weave', 'form', 'protect']:
+                parts.append(f"to {v}")
+            else:
+                parts.append(f"and {v}")
+        elif i % 3 == 0:
+            # Every third, use semicolon for breath
+            parts.append(f"; {v}")
+        elif verbs[i-1].lower() == verbs[i].lower():
+            # Repeated verb - emphasize
+            parts.append(f"and {v}")
+        else:
+            # Normal flow
+            parts.append(v)
+        
+        i += 1
+    
+    # Join with spaces, end with period
+    text = ' '.join(parts)
+    # Clean up spacing around semicolons
+    text = text.replace(' ; ', '; ')
+    return text + "."
 
 
 def print_bidirectional(

@@ -215,16 +215,19 @@ class TestPhonemeClassification:
         assert classify_phoneme('xyz') == 'unknown'
     
     def test_d_and_k_classification(self):
-        """d and k are in BOTH wheel and spine."""
-        # d and k appear in wheel (as phonemes with hourglasses)
-        # AND as spine phonemes (scales)
-        assert is_wheel_phoneme('d')
-        assert is_wheel_phoneme('k')
-        # They're also spine (because they're in SPINE_PRIMARY)
-        # But the classification function returns 'wheel' first
-        # because that's the check order
-        assert classify_phoneme('d') == 'wheel'
-        assert classify_phoneme('k') == 'wheel'
+        """d and k are spine phonemes, dj is on wheel."""
+        # Plain d and k are spine phonemes (scales)
+        assert is_spine_phoneme('d')
+        assert is_spine_phoneme('k')
+        assert not is_wheel_phoneme('d')
+        assert not is_wheel_phoneme('k')
+        # Palatalized dj is on wheel
+        assert is_wheel_phoneme('dj')
+        assert not is_spine_phoneme('dj')
+        # Classification
+        assert classify_phoneme('d') == 'spine-primary'
+        assert classify_phoneme('k') == 'spine-primary'
+        assert classify_phoneme('dj') == 'wheel'
 
 
 class TestRelationSelfRelations:

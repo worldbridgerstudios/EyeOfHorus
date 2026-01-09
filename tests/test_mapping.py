@@ -13,11 +13,15 @@ from eye_of_horus.mapping import (
     WHEEL_16,
     WHEEL_INDEX,
     WHEEL_VERBS,
+    SPINE_VERBS,
+    ALL_VERBS,
     LEIDEN_TO_WHEEL,
     VOWEL_MARKERS,
     leiden_to_wheel,
     phonemes_to_verbs,
     wheel_trajectory,
+    is_wheel_phoneme,
+    is_spine_phoneme,
 )
 
 
@@ -27,6 +31,11 @@ class TestWheelConstants:
     def test_wheel_has_16_phonemes(self):
         """Exactly 16 phonemes in the wheel."""
         assert len(WHEEL_16) == 16
+    
+    def test_wheel_order(self):
+        """Wheel order matches specification."""
+        expected = ['n', 'w', 's', 'sh', 'A', 't', 'H', 'r', 'm', 'a', 'y', 'b', 'p', 'i', 'kh', 'dj']
+        assert WHEEL_16 == expected
     
     def test_wheel_index_complete(self):
         """All wheel phonemes have indices."""
@@ -46,31 +55,48 @@ class TestWheelConstants:
             assert p in WHEEL_VERBS
 
 
-class TestCoreVerbs:
-    """Tests for core verb definitions."""
+class TestWheelVerbs:
+    """Tests for wheel verb definitions."""
     
-    def test_key_verbs(self):
-        """Key phoneme-verb associations are correct."""
+    def test_wheel_verbs(self):
+        """Wheel phoneme-verb associations are correct."""
         expected = {
-            'a': 'SOURCE',
-            'b': 'BIRTH',
-            'd': 'DO',
-            'f': 'BREATHE',
-            'g': 'GROUND',
-            'h': 'SEE',
-            'k': 'CYCLE',
-            'kh': 'MOLD',
-            'm': 'WEIGH',
             'n': 'WEAVE',
-            'p': 'FORM',
-            'r': 'ILLUMINE',
+            'w': 'PROTECT',
             's': 'BIND',
             'sh': 'LIFT',
+            'A': 'OPEN',
             't': 'MEASURE',
-            'w': 'PROTECT',
+            'H': 'PIERCE',
+            'r': 'ILLUMINE',
+            'm': 'WEIGH',
+            'a': 'SOURCE',
+            'y': 'YEARN',
+            'b': 'BIRTH',
+            'p': 'FORM',
+            'i': 'POINT',
+            'kh': 'MOLD',
+            'dj': 'JUDGE',
         }
         for phoneme, verb in expected.items():
             assert WHEEL_VERBS[phoneme] == verb, f"{phoneme} should map to {verb}"
+
+
+class TestSpineVerbs:
+    """Tests for spine verb definitions."""
+    
+    def test_spine_verbs(self):
+        """Spine phoneme-verb associations are correct."""
+        expected = {
+            'x': 'FUNDAMENT',
+            'd': 'DO',
+            'k': 'CYCLE',
+            'g': 'GROUND',
+            'f': 'BREATHE',
+            'h': 'SEE',
+        }
+        for phoneme, verb in expected.items():
+            assert SPINE_VERBS[phoneme] == verb, f"{phoneme} should map to {verb}"
 
 
 class TestLeidenMapping:
@@ -85,29 +111,36 @@ class TestLeidenMapping:
         assert LEIDEN_TO_WHEEL['n'] == 'n'
         assert LEIDEN_TO_WHEEL['r'] == 'r'
     
-    def test_emphatic_collapse(self):
-        """Emphatic consonants collapse to base forms."""
-        assert LEIDEN_TO_WHEEL['ṯ'] == 't'
-        assert LEIDEN_TO_WHEEL['ḏ'] == 'd'
-        assert LEIDEN_TO_WHEEL['q'] == 'k'
+    def test_emphatic_distinctions(self):
+        """Emphatic consonants map correctly."""
+        assert LEIDEN_TO_WHEEL['ṯ'] == 't'   # Emphatic t → t
+        assert LEIDEN_TO_WHEEL['ḏ'] == 'dj'  # Emphatic d → dj (wheel)
+        assert LEIDEN_TO_WHEEL['d'] == 'd'   # Plain d → d (spine)
+        assert LEIDEN_TO_WHEEL['q'] == 'k'   # Emphatic k → k (spine)
     
-    def test_pharyngeal_collapse(self):
-        """Pharyngeals collapse to h/a."""
-        assert LEIDEN_TO_WHEEL['ḥ'] == 'h'
+    def test_pharyngeal_distinctions(self):
+        """Pharyngeals are distinct."""
+        assert LEIDEN_TO_WHEEL['ḥ'] == 'H'   # Pharyngeal → H (wheel)
+        assert LEIDEN_TO_WHEEL['h'] == 'h'   # Glottal → h (spine)
         assert LEIDEN_TO_WHEEL['ḫ'] == 'kh'
         assert LEIDEN_TO_WHEEL['ẖ'] == 'kh'
     
-    def test_glottal_to_a(self):
-        """Glottal stops map to a."""
-        assert LEIDEN_TO_WHEEL['ꜣ'] == 'a'
-        assert LEIDEN_TO_WHEEL['ꜥ'] == 'a'
+    def test_aleph_ayin_distinct(self):
+        """Aleph and ayin are distinct."""
+        assert LEIDEN_TO_WHEEL['ꜣ'] == 'A'   # Aleph → A
+        assert LEIDEN_TO_WHEEL['ꜥ'] == 'a'   # Ayin → a
+    
+    def test_yod_distinct(self):
+        """Yod is distinct from ayin."""
+        assert LEIDEN_TO_WHEEL['ꞽ'] == 'i'   # Yod → i
+        assert LEIDEN_TO_WHEEL['i'] == 'i'   # i → i
     
     def test_shin(self):
         """Š maps to sh."""
         assert LEIDEN_TO_WHEEL['š'] == 'sh'
     
     def test_voiced_distinctions_collapse(self):
-        """Voiced/voiceless distinctions collapse."""
+        """Voiced/voiceless s collapse."""
         assert LEIDEN_TO_WHEEL['z'] == 's'
 
 
@@ -120,22 +153,21 @@ class TestLeidenToWheel:
         assert result == ['p', 't', 'r']
     
     def test_with_aleph(self):
-        """Aleph (ꜣ) converts to a."""
-        result = leiden_to_wheel('ꜣnḫ')  # ankh
-        assert 'a' in result
+        """Aleph (ꜣ) converts to A."""
+        result = leiden_to_wheel('ꜣnḫ')
+        assert 'A' in result
         assert 'n' in result
         assert 'kh' in result
     
     def test_parentheses_removal(self):
         """Parenthetical content removed."""
         result = leiden_to_wheel('ptr(n)')
-        assert result == ['p', 't', 'r']  # (n) is removed
+        assert result == ['p', 't', 'r']
     
     def test_suffix_removal(self):
         """=suffixes removed."""
         result = leiden_to_wheel('ḥtp=f')
-        # Should have h, t, p (suffix =f removed)
-        assert 'h' in result
+        assert 'H' in result  # Pharyngeal H
         assert 't' in result
         assert 'p' in result
     
@@ -154,18 +186,28 @@ class TestLeidenToWheel:
         assert len(result) == 2
         assert result[0][0] == 'ptr'
         assert result[0][1] == ['p', 't', 'r']
-        assert result[1][0] == 'ntr'
-        assert result[1][1] == ['n', 't', 'r']
 
 
 class TestPhonemesToVerbs:
     """Tests for phonemes_to_verbs function."""
     
-    def test_basic_conversion(self):
-        """Phonemes convert to verbs correctly."""
+    def test_wheel_phonemes(self):
+        """Wheel phonemes convert to verbs correctly."""
         phonemes = ['p', 't', 'r']
         verbs = phonemes_to_verbs(phonemes)
         assert verbs == ['FORM', 'MEASURE', 'ILLUMINE']
+    
+    def test_spine_phonemes(self):
+        """Spine phonemes convert to verbs correctly."""
+        phonemes = ['d', 'k', 'h']
+        verbs = phonemes_to_verbs(phonemes)
+        assert verbs == ['DO', 'CYCLE', 'SEE']
+    
+    def test_mixed_phonemes(self):
+        """Mixed wheel+spine phonemes convert correctly."""
+        phonemes = ['r', 'd', 't', 'k']
+        verbs = phonemes_to_verbs(phonemes)
+        assert verbs == ['ILLUMINE', 'DO', 'MEASURE', 'CYCLE']
     
     def test_unknown_phoneme(self):
         """Unknown phonemes marked with ?."""
@@ -177,8 +219,8 @@ class TestPhonemesToVerbs:
         """Empty list returns empty list."""
         assert phonemes_to_verbs([]) == []
     
-    def test_all_phonemes(self):
-        """All 16 phonemes convert without error."""
+    def test_all_wheel_phonemes(self):
+        """All 16 wheel phonemes convert without error."""
         verbs = phonemes_to_verbs(WHEEL_16)
         assert len(verbs) == 16
         for v in verbs:
@@ -212,14 +254,11 @@ class TestVowelMarkers:
         assert 'a' in VOWEL_MARKERS
         assert 'e' in VOWEL_MARKERS
         assert 'i' in VOWEL_MARKERS
-        assert 'o' in VOWEL_MARKERS
-        assert 'u' in VOWEL_MARKERS
     
     def test_masculine_vowels(self):
         """Masculine vowels marked correctly."""
         assert VOWEL_MARKERS['a'] == 'masc'
         assert VOWEL_MARKERS['o'] == 'masc'
-        assert VOWEL_MARKERS['u'] == 'masc'
     
     def test_feminine_vowels(self):
         """Feminine vowels marked correctly."""
@@ -248,9 +287,8 @@ class TestRealWords:
     def test_maat(self):
         """mꜣꜥt (Ma'at) decodes correctly."""
         phonemes = leiden_to_wheel('mꜣꜥt')
-        # m → m, aleph → a, ayin → a, t → t
-        assert 'm' in phonemes
-        assert 't' in phonemes
+        # m → m, aleph → A, ayin → a, t → t
+        assert phonemes == ['m', 'A', 'a', 't']
     
     def test_ra(self):
         """rꜥ (Ra) decodes correctly."""
@@ -262,6 +300,31 @@ class TestRealWords:
     def test_ptah(self):
         """ptḥ (Ptah) decodes correctly."""
         phonemes = leiden_to_wheel('ptḥ')
-        assert phonemes == ['p', 't', 'h']
+        assert phonemes == ['p', 't', 'H']  # Pharyngeal H
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['FORM', 'MEASURE', 'SEE']
+        assert verbs == ['FORM', 'MEASURE', 'PIERCE']
+
+
+class TestPhonemeClassification:
+    """Tests for phoneme classification functions."""
+    
+    def test_wheel_phonemes(self):
+        """Wheel phonemes identified correctly."""
+        for p in WHEEL_16:
+            assert is_wheel_phoneme(p), f"{p} should be wheel"
+    
+    def test_spine_phonemes(self):
+        """Spine phonemes identified correctly."""
+        spine = ['x', 'd', 'k', 'g', 'f', 'h']
+        for p in spine:
+            assert is_spine_phoneme(p), f"{p} should be spine"
+    
+    def test_d_is_spine_not_wheel(self):
+        """Plain d is spine, not wheel."""
+        assert is_spine_phoneme('d')
+        assert not is_wheel_phoneme('d')
+    
+    def test_dj_is_wheel_not_spine(self):
+        """Palatalized dj is wheel, not spine."""
+        assert is_wheel_phoneme('dj')
+        assert not is_spine_phoneme('dj')

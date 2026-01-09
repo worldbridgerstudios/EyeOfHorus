@@ -5,112 +5,152 @@ The wheel has 16 positions, each a fundamental phonemic verb.
 This module handles transliteration conversion; see engine.py for
 the complete hourglass semantics (5 positions per phoneme).
 
-Wheel Order (for trajectory analysis):
-| Pos | Phoneme | Deity   | Core Verb  |
-|-----|---------|---------|------------|
-|  1  | p       | Ptah    | FORM       |
-|  2  | t       | Thoth   | MEASURE    |
-|  3  | kh      | Khnum   | MOLD       |
-|  4  | s       | Serpent | BIND       |
-|  5  | n       | Neith   | WEAVE      |
-|  6  | r       | Ra      | ILLUMINE   |
-|  7  | a       | Atum    | SOURCE     |
-|  8  | h       | Horus   | SEE        |
-|  9  | m       | Ma'at   | WEIGH      |
-| 10  | w       | Wadjet  | PROTECT    |
-| 11  | b       | Ba      | BIRTH      |
-| 12  | k       | Khonsu  | CYCLE      |
-| 13  | g       | Geb     | GROUND     |
-| 14  | d       | Duat    | DO         |
-| 15  | f       | —       | BREATHE    |
-| 16  | sh      | Shu     | LIFT       |
+Wheel Order (from HoloCell paper):
+| Pos | Phoneme | Leiden | Verb       |
+|-----|---------|--------|------------|
+|  1  | n       | n      | WEAVE      |
+|  2  | w       | w      | PROTECT    |
+|  3  | s       | s,z    | BIND       |
+|  4  | sh      | š      | LIFT       |
+|  5  | A       | ꜣ      | OPEN       |
+|  6  | t       | t,ṯ    | MEASURE    |
+|  7  | H       | ḥ      | PIERCE     |
+|  8  | r       | r      | ILLUMINE   |
+|  9  | m       | m      | WEIGH      |
+| 10  | a       | ꜥ      | SOURCE     |
+| 11  | y       | y      | YEARN      |
+| 12  | b       | b      | BIRTH      |
+| 13  | p       | p      | FORM       |
+| 14  | i       | ꞽ,i    | POINT      |
+| 15  | kh      | ḫ,ẖ    | MOLD       |
+| 16  | dj      | ḏ      | JUDGE      |
+
+Spine phonemes (NOT on wheel): x, d, k, q, g, f, h
 """
 
 import re
 from typing import List
 
 # The 16 wheel phonemes in order
-WHEEL_16 = ['p', 't', 'kh', 's', 'n', 'r', 'a', 'h', 'm', 'w', 'b', 'k', 'g', 'd', 'f', 'sh']
+WHEEL_16 = ['n', 'w', 's', 'sh', 'A', 't', 'H', 'r', 'm', 'a', 'y', 'b', 'p', 'i', 'kh', 'dj']
 
 # Phoneme to wheel position (0-indexed)
 WHEEL_INDEX = {p: i for i, p in enumerate(WHEEL_16)}
 
-# Core verbs (masculine equilibrium) - maintained for backward compatibility
-# For full hourglass semantics, use engine.py
+# Core verbs for wheel phonemes
 WHEEL_VERBS = {
-    'p':  'FORM',       # Ptah - shaping from void
-    't':  'MEASURE',    # Thoth - marking, counting
-    'kh': 'MOLD',       # Khnum - shaping on wheel
-    's':  'BIND',       # Serpent/Set - binding, containing
-    'n':  'WEAVE',      # Neith - interlacing threads (= equilibrium itself)
-    'r':  'ILLUMINE',   # Ra - making visible
-    'a':  'SOURCE',     # Atum - origin point
-    'h':  'SEE',        # Horus - perceiving
-    'm':  'WEIGH',      # Ma'at - scales, equanimity
+    'n':  'WEAVE',      # Neith - interlacing
     'w':  'PROTECT',    # Wadjet - shielding
+    's':  'BIND',       # Serpent - containing
+    'sh': 'LIFT',       # Shu - raising
+    'A':  'OPEN',       # Aleph - glottal opening
+    't':  'MEASURE',    # Thoth - marking
+    'H':  'PIERCE',     # Pharyngeal - penetrating
+    'r':  'ILLUMINE',   # Ra - making visible
+    'm':  'WEIGH',      # Ma'at - balancing
+    'a':  'SOURCE',     # Ayin/Atum - origin
+    'y':  'YEARN',      # Palatal glide - reaching
     'b':  'BIRTH',      # Ba - emerging
-    'k':  'CYCLE',      # Khonsu - returning, revolving
-    'g':  'GROUND',     # Geb - supporting, underlying
-    'd':  'DO',         # Duat - acting, transforming
-    'f':  'BREATHE',    # — - animating, vitalizing
-    'sh': 'LIFT',       # Shu - raising, separating
+    'p':  'FORM',       # Ptah - shaping
+    'i':  'POINT',      # Yod - indicating
+    'kh': 'MOLD',       # Khnum - shaping
+    'dj': 'JUDGE',      # Palatalized - decreeing
+}
+
+# Spine phonemes (not on wheel) - for reference
+SPINE_VERBS = {
+    'x':  'FUNDAMENT',  # Cosmogenic axis
+    'd':  'DO',         # Phylogenic axis
+    'k':  'CYCLE',      # Ontogenic axis
+    'g':  'GROUND',     # Secondary spine
+    'f':  'BREATHE',    # Secondary spine
+    'h':  'SEE',        # Secondary spine (glottal, not pharyngeal H)
 }
 
 # Leiden Unified Transliteration → Wheel mapping
 LEIDEN_TO_WHEEL = {
-    # Labials
-    'p': 'p',
-    'b': 'b', 
-    'f': 'f',
-    'm': 'm',
-    'w': 'w',
-    
-    # Dentals/Alveolars  
-    't': 't',
-    'ṯ': 't',      # emphatic t → t
-    'd': 'd',
-    'ḏ': 'd',      # emphatic d → d
+    # Position 1: n
     'n': 'n',
-    'r': 'r',
+    
+    # Position 2: w
+    'w': 'w',
+    'u': 'w',
+    
+    # Position 3: s
     's': 's',
-    'z': 's',      # z → s (voice distinction collapses)
+    'z': 's',
     
-    # Palatals/Velars
-    'š': 'sh',     # shin
-    'k': 'k',
-    'g': 'g',
-    'q': 'k',      # emphatic k → k
+    # Position 4: sh
+    'š': 'sh',
     
-    # Gutturals/Pharyngeals
-    'h': 'h',
-    'ḥ': 'h',      # pharyngeal h → h
-    'ḫ': 'kh',     # voiceless velar fricative
-    'ẖ': 'kh',     # voiced velar fricative → kh
+    # Position 5: A (aleph) — DISTINCT from ayin
+    'ꜣ': 'A',
     
-    # Glottals/Semi-vowels
-    'ꜣ': 'a',      # aleph → a (glottal stop)
-    'ꜥ': 'a',      # ayin → a (pharyngeal)
-    'ꞽ': 'a',      # yod/i → a (treating as vowel carrier)
-    'i': 'a',      # i → a
-    'y': 'a',      # y → a
-    'l': 'r',      # l → r (late Egyptian loan)
-    'u': 'w',      # u → w
+    # Position 6: t
+    't': 't',
+    'ṯ': 't',
+    
+    # Position 7: H (pharyngeal) — DISTINCT from glottal h
+    'ḥ': 'H',
+    
+    # Position 8: r
+    'r': 'r',
+    'l': 'r',
+    
+    # Position 9: m
+    'm': 'm',
+    
+    # Position 10: a (ayin) — DISTINCT from aleph
+    'ꜥ': 'a',
+    
+    # Position 11: y
+    'y': 'y',
+    
+    # Position 12: b
+    'b': 'b',
+    
+    # Position 13: p
+    'p': 'p',
+    
+    # Position 14: i (yod) — DISTINCT from ayin
+    'ꞽ': 'i',
+    'i': 'i',
+    
+    # Position 15: kh
+    'ḫ': 'kh',
+    'ẖ': 'kh',
+    
+    # Position 16: dj (palatalized) — on wheel
+    'ḏ': 'dj',
+    
+    # Spine phonemes (map but flag as spine)
+    'd': 'd',   # Plain d is spine
+    'k': 'k',   # Plain k is spine
+    'q': 'k',   # Emphatic k → k (spine)
+    'g': 'g',   # Spine
+    'f': 'f',   # Spine
+    'h': 'h',   # Glottal h is spine (distinct from pharyngeal H)
 }
+
+# All verbs (wheel + spine)
+ALL_VERBS = {**WHEEL_VERBS, **SPINE_VERBS}
 
 # Vowel markers for mode detection (used by engine.py)
 VOWEL_MARKERS = {
     'a': 'masc',   # "ah" → masculine
-    'e': 'fem',    # "ey/ay" → feminine (aleph quality)
+    'e': 'fem',    # "ey/ay" → feminine
     'i': 'fem',    # → feminine
-    'o': 'masc',   # stress → masculine intensity
-    'u': 'masc',   # stress → masculine intensity
+    'o': 'masc',   # → masculine
+    'u': 'masc',   # → masculine
     'y': 'fem',    # → feminine
 }
 
 
 def leiden_to_wheel(translit: str, keep_words: bool = False) -> List[str]:
     """
-    Convert Leiden transliteration to wheel phoneme sequence.
+    Convert Leiden transliteration to phoneme sequence.
+    
+    Returns both wheel AND spine phonemes (caller can distinguish).
     
     Args:
         translit: Leiden transliteration string
@@ -118,7 +158,7 @@ def leiden_to_wheel(translit: str, keep_words: bool = False) -> List[str]:
                    If False, return flat phoneme list
     
     Returns:
-        List of wheel phonemes (16-position)
+        List of phonemes (wheel + spine)
     """
     # Clean: remove parentheses content, =suffixes, punctuation, numbers
     clean = re.sub(r'\([^)]*\)', '', translit)  # remove (...)
@@ -128,7 +168,6 @@ def leiden_to_wheel(translit: str, keep_words: bool = False) -> List[str]:
     clean = clean.lower().strip()
     
     if keep_words:
-        # Process word by word
         words = clean.split()
         result = []
         for word in words:
@@ -137,15 +176,13 @@ def leiden_to_wheel(translit: str, keep_words: bool = False) -> List[str]:
                 result.append((word, phonemes))
         return result
     else:
-        # Flat phoneme list
         return _convert_word(clean.replace(' ', ''))
 
 
 def _convert_word(word: str) -> List[str]:
-    """Convert a single word to wheel phonemes."""
+    """Convert a single word to phonemes."""
     result = []
     for char in word:
-        # Skip combining marks
         if char in ' ̯̱':
             continue
         if char in LEIDEN_TO_WHEEL:
@@ -153,9 +190,19 @@ def _convert_word(word: str) -> List[str]:
     return result
 
 
+def is_wheel_phoneme(p: str) -> bool:
+    """Check if phoneme is on the wheel."""
+    return p in WHEEL_VERBS
+
+
+def is_spine_phoneme(p: str) -> bool:
+    """Check if phoneme is spine."""
+    return p in SPINE_VERBS
+
+
 def phonemes_to_verbs(phonemes: List[str]) -> List[str]:
-    """Convert phoneme sequence to verb sequence (core verbs)."""
-    return [WHEEL_VERBS.get(p, f'?{p}') for p in phonemes]
+    """Convert phoneme sequence to verb sequence."""
+    return [ALL_VERBS.get(p, f'?{p}') for p in phonemes]
 
 
 def wheel_trajectory(translit: str) -> str:
