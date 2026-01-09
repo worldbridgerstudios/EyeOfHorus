@@ -18,6 +18,238 @@ from .mapping import WHEEL_VERBS, leiden_to_wheel, phonemes_to_verbs
 from .engine import get_hourglass, Mode, Pole
 
 
+# =============================================================================
+# READABLE TRANSLATION LAYER
+# =============================================================================
+
+# Verb forms for natural prose: verb → (gerund, noun, third_person, imperative)
+VERB_FORMS = {
+    # Wheel verbs (v63) - masculine equilibrium
+    'integrate': ('integrating', 'wholeness', 'integrates', 'integrate'),
+    'radiate': ('radiating', 'radiance', 'radiates', 'radiate'),
+    'emerge': ('emerging', 'emergence', 'emerges', 'emerge'),
+    'direct': ('directing', 'direction', 'directs', 'direct'),
+    'lead': ('leading', 'the path', 'leads', 'lead'),
+    'read': ('reading', 'meaning', 'reads', 'read'),
+    'express': ('expressing', 'expression', 'expresses', 'express'),
+    'shine': ('shining', 'light', 'shines', 'shine'),
+    'true': ('truing', 'truth', 'trues', 'true'),
+    'honour': ('honouring', 'honour', 'honours', 'honour'),
+    'devote': ('devoting', 'devotion', 'devotes', 'devote'),
+    'receive': ('receiving', 'receiving', 'receives', 'receive'),
+    'store': ('storing', 'the treasury', 'stores', 'store'),
+    'bestow': ('bestowing', 'the gift', 'bestows', 'bestow'),
+    'embody': ('embodying', 'form', 'embodies', 'embody'),
+    'discern': ('discerning', 'clarity', 'discerns', 'discern'),
+    # Feminine equilibrium
+    'weave': ('weaving', 'the weaving', 'weaves', 'weave'),
+    'flow': ('flowing', 'flow', 'flows', 'flow'),
+    'cocoon': ('cocooning', 'stillness', 'cocoons', 'cocoon'),
+    'align': ('aligning', 'alignment', 'aligns', 'align'),
+    'tend': ('tending', 'care', 'tends', 'tend'),
+    'etch': ('etching', 'inscription', 'etches', 'etch'),
+    'interpret': ('interpreting', 'understanding', 'interprets', 'interpret'),
+    'bask': ('basking', 'warmth', 'basks', 'bask'),
+    'trust': ('trusting', 'trust', 'trusts', 'trust'),
+    'allow': ('allowing', 'openness', 'allows', 'allow'),
+    'restore': ('restoring', 'renewal', 'restores', 'restore'),
+    'cultivate': ('cultivating', 'growth', 'cultivates', 'cultivate'),
+    'gather': ('gathering', 'abundance', 'gathers', 'gather'),
+    'protect': ('protecting', 'sanctuary', 'protects', 'protect'),
+    'capacity': ('holding', 'capacity', 'holds', 'hold'),
+    'act': ('acting', 'action', 'acts', 'act'),
+    # Spine verbs
+    'cycle': ('cycling', 'the turning', 'cycles', 'turn'),
+    'do': ('doing', 'deed', 'does', 'do'),
+    'fundament': ('grounding', 'foundation', 'grounds', 'ground'),
+    'ground': ('grounding', 'earth', 'grounds', 'ground'),
+    'breathe': ('breathing', 'breath', 'breathes', 'breathe'),
+    'see': ('seeing', 'vision', 'sees', 'see'),
+}
+
+
+def _gerund(verb: str) -> str:
+    """Convert verb to gerund form."""
+    v = verb.lower()
+    # Check if already a compound phrase
+    if ' upon ' in v or ' and ' in v:
+        return v
+    if v in VERB_FORMS:
+        return VERB_FORMS[v][0]
+    if v.endswith('e'):
+        return v[:-1] + 'ing'
+    return v + 'ing'
+
+
+def _noun(verb: str) -> str:
+    """Convert verb to noun form."""
+    v = verb.lower()
+    # Check if already a compound phrase
+    if ' upon ' in v or ' and ' in v:
+        return v
+    if v in VERB_FORMS:
+        return VERB_FORMS[v][1]
+    return v
+
+
+def _third(verb: str) -> str:
+    """Convert verb to third person form."""
+    v = verb.lower()
+    # Check if already a compound phrase
+    if ' upon ' in v or ' and ' in v:
+        return 'deepens'
+    if v in VERB_FORMS:
+        return VERB_FORMS[v][2]
+    if v.endswith('s') or v.endswith('sh') or v.endswith('ch'):
+        return v + 'es'
+    return v + 's'
+
+
+def _imperative(verb: str) -> str:
+    """Convert verb to imperative form."""
+    v = verb.lower()
+    # Check if already a compound phrase
+    if ' upon ' in v or ' and ' in v:
+        return v
+    if v in VERB_FORMS:
+        return VERB_FORMS[v][3]
+    return v
+
+
+def translate_to_readable(verbs: List[str], direction: str = "ascend") -> str:
+    """
+    Translate verb sequence into flowing readable English.
+    
+    Uses varied sentence structures for natural, poetic prose.
+    """
+    if not verbs:
+        return ""
+    
+    sentences = []
+    i = 0
+    pattern_idx = 0
+    
+    # Ascending patterns: building, rising, becoming
+    ascend_patterns = [
+        # 5-verb patterns
+        lambda v: f"From {_noun(v[0])}, {_noun(v[1])} rises into {_noun(v[2])}—{_gerund(v[3])}, {_gerund(v[4])}.",
+        lambda v: f"{_noun(v[0]).capitalize()} opens to {_noun(v[1])}. {_noun(v[2]).capitalize()} meets {_noun(v[3])}, and {_noun(v[4])} dawns.",
+        lambda v: f"As {_noun(v[0])} {_third(v[1])}, {_noun(v[2])} {_third(v[3])} toward {_noun(v[4])}.",
+        lambda v: f"Here: {_noun(v[0])}, {_noun(v[1])}, {_noun(v[2])}. Then {_noun(v[3])} becoming {_noun(v[4])}.",
+        lambda v: f"{_imperative(v[0]).capitalize()}, {_imperative(v[1])}, {_imperative(v[2])}—until {_noun(v[3])} {_third(v[4])}.",
+    ]
+    
+    # Descending patterns: returning, dissolving, surrendering  
+    descend_patterns = [
+        lambda v: f"{_noun(v[0]).capitalize()} returns through {_noun(v[1])} into {_noun(v[2])}—{_gerund(v[3])}, {_gerund(v[4])}.",
+        lambda v: f"Down from {_noun(v[0])}: {_noun(v[1])} folds into {_noun(v[2])}, {_noun(v[3])} dissolves to {_noun(v[4])}.",
+        lambda v: f"As {_noun(v[0])} releases, {_noun(v[1])} {_third(v[2])} back toward {_noun(v[3])}, finding {_noun(v[4])}.",
+        lambda v: f"{_noun(v[0]).capitalize()} surrenders to {_noun(v[1])}. {_noun(v[2]).capitalize()} meets {_noun(v[3])}, returning to {_noun(v[4])}.",
+        lambda v: f"Release {_noun(v[0])}, release {_noun(v[1])}—{_noun(v[2])} {_third(v[3])} home to {_noun(v[4])}.",
+    ]
+    
+    # 4-verb patterns
+    four_patterns_asc = [
+        lambda v: f"{_noun(v[0]).capitalize()} and {_noun(v[1])} entwine; {_noun(v[2])} {_third(v[3])}.",
+        lambda v: f"Through {_gerund(v[0])}, {_noun(v[1])} finds {_noun(v[2])}. {_noun(v[3]).capitalize()} follows.",
+        lambda v: f"{_gerund(v[0]).capitalize()} into {_gerund(v[1])}—{_noun(v[2])} reveals {_noun(v[3])}.",
+    ]
+    
+    four_patterns_desc = [
+        lambda v: f"{_noun(v[0]).capitalize()} unwinds to {_noun(v[1])}; {_noun(v[2])} returns to {_noun(v[3])}.",
+        lambda v: f"Releasing {_noun(v[0])}, {_noun(v[1])} softens to {_noun(v[2])}, then {_noun(v[3])}.",
+        lambda v: f"From {_noun(v[0])} back through {_noun(v[1])}—{_noun(v[2])} finds {_noun(v[3])}.",
+    ]
+    
+    # 3-verb patterns
+    three_patterns_asc = [
+        lambda v: f"{_noun(v[0]).capitalize()}, {_noun(v[1])}, {_noun(v[2])}.",
+        lambda v: f"In {_noun(v[0])}: {_noun(v[1])} and {_noun(v[2])}.",
+        lambda v: f"{_gerund(v[0]).capitalize()}, {_gerund(v[1])}, {_gerund(v[2])}.",
+    ]
+    
+    three_patterns_desc = [
+        lambda v: f"{_noun(v[0]).capitalize()} to {_noun(v[1])} to {_noun(v[2])}.",
+        lambda v: f"Back through {_noun(v[0])}, {_noun(v[1])}, {_noun(v[2])}.",
+        lambda v: f"{_noun(v[0]).capitalize()} dissolves: {_noun(v[1])}, then {_noun(v[2])}.",
+    ]
+    
+    # 2-verb patterns
+    two_patterns_asc = [
+        lambda v: f"{_noun(v[0]).capitalize()} becomes {_noun(v[1])}.",
+        lambda v: f"From {_noun(v[0])}, {_noun(v[1])}.",
+    ]
+    
+    two_patterns_desc = [
+        lambda v: f"{_noun(v[0]).capitalize()} returns to {_noun(v[1])}.",
+        lambda v: f"{_noun(v[0]).capitalize()} and {_noun(v[1])}, at rest.",
+    ]
+    
+    # 1-verb patterns
+    one_patterns = [
+        lambda v: f"{_noun(v[0]).capitalize()}.",
+        lambda v: f"And {_noun(v[0])}.",
+    ]
+    
+    is_ascending = direction.lower() in ('ascend', 'ascending', 'forward')
+    
+    def get_chunk(size):
+        """Get chunk, handling immediate repeats gracefully."""
+        chunk = verbs[i:i+size]
+        result = []
+        prev = None
+        for v in chunk:
+            if v.lower() == prev:
+                # Immediate repeat - intensify
+                n = _noun(v)
+                result.append(f"{n} upon {n}")
+            else:
+                result.append(v)
+            prev = v.lower()
+        return result
+    
+    while i < len(verbs):
+        remaining = len(verbs) - i
+        
+        if remaining >= 5:
+            chunk = get_chunk(5)
+            patterns = ascend_patterns if is_ascending else descend_patterns
+            sentence = patterns[pattern_idx % len(patterns)](chunk)
+            i += 5
+            pattern_idx += 1
+            
+        elif remaining == 4:
+            chunk = get_chunk(4)
+            patterns = four_patterns_asc if is_ascending else four_patterns_desc
+            sentence = patterns[pattern_idx % len(patterns)](chunk)
+            i += 4
+            pattern_idx += 1
+            
+        elif remaining == 3:
+            chunk = get_chunk(3)
+            patterns = three_patterns_asc if is_ascending else three_patterns_desc
+            sentence = patterns[pattern_idx % len(patterns)](chunk)
+            i += 3
+            pattern_idx += 1
+            
+        elif remaining == 2:
+            chunk = get_chunk(2)
+            patterns = two_patterns_asc if is_ascending else two_patterns_desc
+            sentence = patterns[pattern_idx % len(patterns)](chunk)
+            i += 2
+            pattern_idx += 1
+            
+        else:
+            chunk = get_chunk(1)
+            sentence = one_patterns[pattern_idx % len(one_patterns)](chunk)
+            i += 1
+            pattern_idx += 1
+        
+        sentences.append(sentence)
+    
+    return '\n'.join(sentences)
+
+
 # Cache for pyramid texts
 _pyramid_texts: List[Sentence] = None
 
@@ -80,7 +312,8 @@ class BidirectionalLine:
 def decode_bidirectional(
     start: int = 1,
     end: int = 9,
-    verbose: bool = True
+    verbose: bool = True,
+    readable: bool = False
 ) -> Tuple[List[BidirectionalLine], str, str]:
     """
     Decode lines bidirectionally: forward (ascending) and reverse (descending).
@@ -89,6 +322,7 @@ def decode_bidirectional(
         start: First line (1-based)
         end: Last line (1-based, inclusive)
         verbose: Print results
+        readable: Translate to flowing English prose (default False)
         
     Returns:
         Tuple of:
@@ -137,8 +371,12 @@ def decode_bidirectional(
         all_reverse_verbs.extend(reverse_verbs)
     
     # Build paragraphs
-    forward_paragraph = build_paragraph(all_forward_verbs, "ascending")
-    reverse_paragraph = build_paragraph(all_reverse_verbs, "descending")
+    if readable:
+        forward_paragraph = translate_to_readable(all_forward_verbs, "ascend")
+        reverse_paragraph = translate_to_readable(all_reverse_verbs, "descend")
+    else:
+        forward_paragraph = build_paragraph(all_forward_verbs, "ascending")
+        reverse_paragraph = build_paragraph(all_reverse_verbs, "descending")
     
     if verbose:
         print_bidirectional(results, forward_paragraph, reverse_paragraph, start, end_idx)

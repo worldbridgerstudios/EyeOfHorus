@@ -5,11 +5,11 @@ The wheel has 16 positions, each a fundamental phonemic verb.
 This module handles transliteration conversion; see engine.py for
 the complete hourglass semantics (5 positions per phoneme).
 
-Wheel Lexicon v62 (January 2026):
+Wheel Lexicon v63 (January 2026):
 | Pos | Ph  | Deity    | F eq      | M eq      |
 |-----|-----|----------|-----------|-----------|
 |  1  | n   | Neith    | WEAVE     | INTEGRATE |
-|  2  | w   | Wadjet   | FLOW      | CHARGE    |
+|  2  | w   | Wadjet   | FLOW      | RADIATE   |
 |  3  | s   | Sekhmet  | COCOON    | EMERGE    |
 |  4  | sh  | Shu      | ALIGN     | DIRECT    |
 |  5  | A   | Atum     | TEND      | LEAD      |
@@ -19,7 +19,7 @@ Wheel Lexicon v62 (January 2026):
 |  9  | m   | Ma'at    | TRUST     | TRUE      |
 | 10  | a   | Anubis   | ALLOW     | HONOUR    |
 | 11  | y   | Isis     | RESTORE   | DEVOTE    |
-| 12  | b   | Taweret  | CULTIVATE | HARVEST   |
+| 12  | b   | Bes      | CULTIVATE | RECEIVE   |
 | 13  | p   | Ptah     | GATHER    | STORE     |
 | 14  | i   | Ihy      | PROTECT   | BESTOW    |
 | 15  | kh  | Khnum    | CAPACITY  | EMBODY    |
@@ -40,7 +40,7 @@ WHEEL_INDEX = {p: i for i, p in enumerate(WHEEL_16)}
 # Core verbs for wheel phonemes (M equilibrium from v62 lexicon)
 WHEEL_VERBS = {
     'n':  'INTEGRATE',  # Neith - weaving into coherence
-    'w':  'CHARGE',     # Wadjet - life force, chi
+    'w':  'RADIATE',   # Wadjet - life force, chi
     's':  'EMERGE',     # Sekhmet - transformation
     'sh': 'DIRECT',     # Shu - navigation
     'A':  'LEAD',       # Atum - shepherding
@@ -50,7 +50,7 @@ WHEEL_VERBS = {
     'm':  'TRUE',       # Ma'at - truth
     'a':  'HONOUR',     # Anubis - threshold
     'y':  'DEVOTE',     # Isis - devotion
-    'b':  'HARVEST',    # Taweret - cultivation
+    'b':  'RECEIVE',   # Taweret - cultivation
     'p':  'STORE',      # Ptah - gathering
     'i':  'BESTOW',     # Ihy - legacy
     'kh': 'EMBODY',     # Khnum - incarnation

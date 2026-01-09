@@ -137,7 +137,7 @@ class TestDeityAssociations:
     """Tests for deity associations."""
     
     def test_key_deity_mappings(self):
-        """Core phoneme-deity associations are correct (v62)."""
+        """Core phoneme-deity associations are correct (v63)."""
         associations = {
             'a': 'Anubis',
             'n': 'Neith',
@@ -153,7 +153,7 @@ class TestDeityAssociations:
             's': 'Sekhmet',
             'A': 'Atum',
             'y': 'Isis',
-            'b': 'Taweret',
+            'b': 'Bes',
             'i': 'Ihy',
             'dj': 'Thoth',
         }
@@ -317,7 +317,7 @@ class TestDecoding:
         """Decode in masculine mode returns masculine verbs."""
         phonemes = ['a', 'b', 'r']
         verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.EQUILIBRIUM)
-        assert verbs == ['HONOUR', 'HARVEST', 'SHINE']
+        assert verbs == ['HONOUR', 'RECEIVE', 'SHINE']
     
     def test_decode_with_mode_feminine(self):
         """Decode in feminine mode returns feminine verbs."""
@@ -329,20 +329,20 @@ class TestDecoding:
         """decode_trajectory returns arrow-joined string."""
         phonemes = ['a', 'b', 'r']
         traj = decode_trajectory(phonemes, Mode.MASCULINE)
-        assert traj == 'HONOUR → HARVEST → SHINE'
+        assert traj == 'HONOUR → RECEIVE → SHINE'
     
     def test_phonemes_to_verbs_backward_compat(self):
         """phonemes_to_verbs maintains backward compatibility."""
         phonemes = ['a', 'b', 'r', 'k', 'd']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['HONOUR', 'HARVEST', 'SHINE', 'CYCLE', 'DO']
+        assert verbs == ['HONOUR', 'RECEIVE', 'SHINE', 'CYCLE', 'DO']
     
     def test_abracadabra(self):
         """ABRACADABRA decodes correctly."""
         # Ah-Ba-Ra-Ka-Da-Ba-Ra → A B R K D B R
         phonemes = ['a', 'b', 'r', 'k', 'd', 'b', 'r']
         verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.EQUILIBRIUM)
-        assert verbs == ['HONOUR', 'HARVEST', 'SHINE', 'CYCLE', 'DO', 'HARVEST', 'SHINE']
+        assert verbs == ['HONOUR', 'RECEIVE', 'SHINE', 'CYCLE', 'DO', 'RECEIVE', 'SHINE']
     
     def test_maat_decode(self):
         """MA'AT decodes as TRUE-HONOUR-READ."""

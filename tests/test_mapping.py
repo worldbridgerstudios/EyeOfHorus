@@ -59,10 +59,10 @@ class TestWheelVerbs:
     """Tests for wheel verb definitions."""
     
     def test_wheel_verbs(self):
-        """Wheel phoneme-verb associations are correct (v62)."""
+        """Wheel phoneme-verb associations are correct (v63)."""
         expected = {
             'n': 'INTEGRATE',
-            'w': 'CHARGE',
+            'w': 'RADIATE',
             's': 'EMERGE',
             'sh': 'DIRECT',
             'A': 'LEAD',
@@ -72,7 +72,7 @@ class TestWheelVerbs:
             'm': 'TRUE',
             'a': 'HONOUR',
             'y': 'DEVOTE',
-            'b': 'HARVEST',
+            'b': 'RECEIVE',
             'p': 'STORE',
             'i': 'BESTOW',
             'kh': 'EMBODY',

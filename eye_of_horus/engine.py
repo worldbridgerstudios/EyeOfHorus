@@ -139,7 +139,7 @@ class Hourglass:
         return self.equilibrium_masc
 
 
-# The complete 16-phoneme hourglass lexicon (WHEEL phonemes) - v62
+# The complete 16-phoneme hourglass lexicon (WHEEL phonemes) - v63
 PHONEME_HOURGLASSES: Dict[str, Hourglass] = {
     # Position 1: n
     'n': Hourglass(
@@ -151,8 +151,8 @@ PHONEME_HOURGLASSES: Dict[str, Hourglass] = {
     # Position 2: w
     'w': Hourglass(
         phoneme='w', deity='Wadjet',
-        equilibrium_masc='CHARGE', equilibrium_fem='FLOW',
-        min_masc='DRAIN', max_masc='SURGE',
+        equilibrium_masc='RADIATE', equilibrium_fem='FLOW',
+        min_masc='CONTAIN', max_masc='FLOOD',
         min_fem='STAGNATE', max_fem='CIRCULATE'
     ),
     # Position 3: s
@@ -220,9 +220,9 @@ PHONEME_HOURGLASSES: Dict[str, Hourglass] = {
     ),
     # Position 12: b
     'b': Hourglass(
-        phoneme='b', deity='Taweret',
-        equilibrium_masc='HARVEST', equilibrium_fem='CULTIVATE',
-        min_masc='WASTE', max_masc='REAP',
+        phoneme='b', deity='Bes',
+        equilibrium_masc='RECEIVE', equilibrium_fem='CULTIVATE',
+        min_masc='REFUSE', max_masc='ENGULF',
         min_fem='DEPLETE', max_fem='NOURISH'
     ),
     # Position 13: p

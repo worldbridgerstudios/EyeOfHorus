@@ -126,11 +126,11 @@ NUM_SPINE = 6
 # VERB TABLE (256 entries, indexed by semantic address)
 # =============================================================================
 
-# Verb data (v62): phoneme_id → (eq_m, min_m, max_m, eq_f, min_f, max_f)
+# Verb data (v63): phoneme_id → (eq_m, min_m, max_m, eq_f, min_f, max_f)
 _VERB_DATA = {
     # Wheel phonemes (v62 lexicon)
     ID_N:  ('INTEGRATE', 'FRAGMENT', 'FUSE', 'WEAVE', 'UNRAVEL', 'INTERLOCK'),
-    ID_W:  ('CHARGE', 'DRAIN', 'SURGE', 'FLOW', 'STAGNATE', 'CIRCULATE'),
+    ID_W:  ('RADIATE', 'CONTAIN', 'FLOOD', 'FLOW', 'STAGNATE', 'CIRCULATE'),
     ID_S:  ('EMERGE', 'REGRESS', 'BURST', 'COCOON', 'EXPOSE', 'ENCASE'),
     ID_SH: ('DIRECT', 'SCATTER', 'COMMAND', 'ALIGN', 'DRIFT', 'ORIENT'),
     ID_A:  ('LEAD', 'ABANDON', 'DRIVE', 'TEND', 'NEGLECT', 'NURTURE'),
@@ -140,7 +140,7 @@ _VERB_DATA = {
     ID_M:  ('TRUE', 'FALSIFY', 'VERIFY', 'TRUST', 'DOUBT', 'BELIEVE'),
     ID_AA: ('HONOUR', 'DISHONOUR', 'REVERE', 'ALLOW', 'BLOCK', 'PERMIT'),
     ID_Y:  ('DEVOTE', 'BETRAY', 'CONSECRATE', 'RESTORE', 'NEGLECT', 'HEAL'),
-    ID_B:  ('HARVEST', 'WASTE', 'REAP', 'CULTIVATE', 'DEPLETE', 'NOURISH'),
+    ID_B:  ('RECEIVE', 'REFUSE', 'ENGULF', 'CULTIVATE', 'DEPLETE', 'NOURISH'),
     ID_P:  ('STORE', 'SCATTER', 'HOARD', 'GATHER', 'DISPERSE', 'COLLECT'),
     ID_I:  ('BESTOW', 'WITHHOLD', 'GIFT', 'PROTECT', 'EXPOSE', 'GUARD'),
     ID_KH: ('EMBODY', 'FUMBLE', 'MASTER', 'CAPACITY', 'NUMB', 'DEFT'),
@@ -169,12 +169,12 @@ for phoneme_id, verbs in _VERB_DATA.items():
     VERB_TABLE[(phoneme_id << 3) | Pos.MAX_FEM]  = max_f
 
 # =============================================================================
-# CORE VERB TABLE (equilibrium only, for simple lookups) - v62
+# CORE VERB TABLE (equilibrium only, for simple lookups) - v63
 # =============================================================================
 
 CORE_VERB_TABLE = np.array([
-    'INTEGRATE', 'CHARGE', 'EMERGE', 'DIRECT', 'LEAD', 'READ', 'EXPRESS', 'SHINE',
-    'TRUE', 'HONOUR', 'DEVOTE', 'HARVEST', 'STORE', 'BESTOW', 'EMBODY', 'DISCERN',
+    'INTEGRATE', 'RADIATE', 'EMERGE', 'DIRECT', 'LEAD', 'READ', 'EXPRESS', 'SHINE',
+    'TRUE', 'HONOUR', 'DEVOTE', 'RECEIVE', 'STORE', 'BESTOW', 'EMBODY', 'DISCERN',
     'DO', 'CYCLE', 'FUNDAMENT', 'GROUND', 'BREATHE', 'SEE',
 ])
 

@@ -64,15 +64,15 @@ class TestEndToEndDecoding:
         
         # Equilibrium (core verbs)
         eq_traj = decode_trajectory(phonemes, Mode.MASCULINE, Pole.EQUILIBRIUM)
-        assert eq_traj == 'HONOUR → HARVEST → SHINE → CYCLE → DO → HARVEST → SHINE'
+        assert eq_traj == 'HONOUR → RECEIVE → SHINE → CYCLE → DO → RECEIVE → SHINE'
         
         # Minima
         min_verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.MINIMA)
-        assert min_verbs == ['DISHONOUR', 'WASTE', 'DIM', 'HALT', 'STALL', 'WASTE', 'DIM']
+        assert min_verbs == ['DISHONOUR', 'REFUSE', 'DIM', 'HALT', 'STALL', 'REFUSE', 'DIM']
         
         # Maxima
         max_verbs = decode_with_mode(phonemes, Mode.MASCULINE, Pole.MAXIMA)
-        assert max_verbs == ['REVERE', 'REAP', 'BLAZE', 'ACCELERATE', 'FORCE', 'REAP', 'BLAZE']
+        assert max_verbs == ['REVERE', 'ENGULF', 'BLAZE', 'ACCELERATE', 'FORCE', 'ENGULF', 'BLAZE']
 
 
 class TestVerbConsistency:
@@ -186,13 +186,13 @@ class TestRealWorldScenarios:
         assert verbs == ['INTEGRATE', 'READ']
     
     def test_woman_weave_men_concept(self):
-        """Test the WOMAN = CHARGE-TRUE-INTEGRATE phonemic concept."""
+        """Test the WOMAN = RADIATE-TRUE-INTEGRATE phonemic concept."""
         # In English: w-o-m-a-n
         # Phonemically: w-m-n (stripping vowels)
         phonemes = ['w', 'm', 'n']
         verbs = phonemes_to_verbs(phonemes)
-        assert verbs == ['CHARGE', 'TRUE', 'INTEGRATE']
-        # CHARGE-TRUE-INTEGRATE: she who charges, truths, and integrates
+        assert verbs == ['RADIATE', 'TRUE', 'INTEGRATE']
+        # RADIATE-TRUE-INTEGRATE: she who radiates, truths, and integrates
 
 
 class TestModuleImports:

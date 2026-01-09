@@ -195,7 +195,7 @@ class TestLayeredDecode:
         ids = np.array([ID_N, ID_W, ID_S], dtype=np.uint8)
         verbs = decode_layer(ids, Layer.CORE)
         assert verbs[0] == 'INTEGRATE'
-        assert verbs[1] == 'CHARGE'
+        assert verbs[1] == 'RADIATE'
         assert verbs[2] == 'EMERGE'
     
     def test_f1_layer_alternation(self):
@@ -240,7 +240,7 @@ class TestLayeredDecode:
         """decode_text should accept string phonemes."""
         result = decode_text(['n', 'w', 's'])
         assert result.core[0] == 'INTEGRATE'
-        assert result.core[1] == 'CHARGE'
+        assert result.core[1] == 'RADIATE'
         assert result.core[2] == 'EMERGE'
 
 
@@ -320,7 +320,7 @@ class TestConvenience:
         """Fast verb conversion should match slow path."""
         phonemes = ['n', 'w', 's', 'sh', 'A', 't']
         fast = phonemes_to_verbs_fast(phonemes)
-        expected = ['INTEGRATE', 'CHARGE', 'EMERGE', 'DIRECT', 'LEAD', 'READ']
+        expected = ['INTEGRATE', 'RADIATE', 'EMERGE', 'DIRECT', 'LEAD', 'READ']
         assert fast == expected
     
     def test_spine_phonemes_in_text(self):
