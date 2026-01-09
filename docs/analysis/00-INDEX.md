@@ -1,0 +1,81 @@
+# EyeOfHorus Analysis Documents
+
+## Sequential Discovery Index
+
+These documents record the progressive discoveries made during the development of the EyeOfHorus phonemic engine. They should be read in order.
+
+---
+
+### Foundation: Phonemic Ontogeny
+
+| # | Document | Summary |
+|---|----------|---------|
+| 01 | [Primal Phonemic Sequence](01-primal-phonemic-sequence.md) | Baby's phonemic development order (lowest→highest muscular effort) spells cosmic truth |
+| 02 | [Phonemic Ontogeny](02-phonemic-ontogeny.md) | Ontogeny recapitulates cosmogony — developmental sequence as cosmological map |
+| 03 | [Phonemic Ontogeny Synthesis](03-phonemic-ontogeny-synthesis.md) | Integration of developmental, linguistic, and cosmic patterns |
+| 04 | [Woman Weave Men](04-woman-weave-men.md) | Key word analysis: WOMAN = WEAVE-MEN, phonemic transparency in language |
+
+---
+
+### Structure: The 408 Grammar
+
+| # | Document | Summary |
+|---|----------|---------|
+| 05 | [Phonemic Lexicon Complete](05-phonemic-lexicon-complete.md) | 16 phonemes × 5 positions (hourglass), verbs, modes, ABRACADABRA decoded |
+| 06 | [408 Grammar Architecture](06-408-grammar-architecture.md) | T(16) = 136 relations × 3 scales = 408, hourglass structure |
+| 07 | [Pyramid Text Line 1 Yuga Mapping](07-pyramid-text-line1-yuga-mapping.md) | 23 phonemes of Line 1 mapped to 4:3:2:1 Yuga structure |
+
+---
+
+### Dynamics: Rhythm & Breath
+
+| # | Document | Summary |
+|---|----------|---------|
+| 08 | [Fibonacci Breath Architecture](08-fibonacci-breath-architecture.md) | 9-line = 1+2+3+2+1, script ratios 1:1:2, φ-boundaries, health scoring |
+| 09 | [Engine Completion Architecture](09-engine-completion-architecture.md) | What remains: rhythm detection, reversal grammar, tidal principle |
+
+---
+
+### Resolution: The Spine
+
+| # | Document | Summary |
+|---|----------|---------|
+| 10 | [Spine Phonemes as Scales](10-spine-phonemes-as-scales.md) | **KEY:** Scales ARE phonemes (x, d, k). 408 = 136 wheel × 3 spine axes |
+
+---
+
+## Key Formulas
+
+```
+T(16) = 136                    # Triangular number, unique wheel relations
+136 × 3 = 408                  # × spine axes = total grammar
+16 × 5 = 80                    # Wheel phonemes × hourglass positions
+1 + 2 + 3 + 2 + 1 = 9          # Fibonacci breath (genesis block)
+1 : 1 : 2                      # Script ratio (hieroglyph:hieratic:Coptic)
+```
+
+---
+
+## The Two Systems
+
+| System | Phonemes | Function | Temporal Layer |
+|--------|----------|----------|----------------|
+| **Wheel** | 16 | Rotating, transmissible | Post-merger (~600 BCE) |
+| **Spine** | x, d, k (primary) | Fixed frame, scales | Pre-merger (~2000 BCE) |
+
+---
+
+## Author
+
+Nicholas David Brown  
+Independent Researcher
+
+---
+
+## Date
+
+Index created: January 2026
+
+---
+
+*"The wheel rotates. The spine holds. The grammar speaks."*

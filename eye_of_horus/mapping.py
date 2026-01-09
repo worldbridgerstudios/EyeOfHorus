@@ -1,29 +1,29 @@
 """
 Leiden transliteration → 16-position wheel mapping.
 
-The wheel has 16 positions, each a fundamental phonemic verb:
+The wheel has 16 positions, each a fundamental phonemic verb.
+This module handles transliteration conversion; see engine.py for
+the complete hourglass semantics (5 positions per phoneme).
 
-| Pos | Phoneme | Deity  | VERB      |
-|-----|---------|--------|-----------|
-|  1  | p       | Ptah   | FORM      |
-|  2  | t       | Thoth  | MEASURE   |
-|  3  | kh      | Khnum  | MOLD      |
-|  4  | s       | Sokar  | BIND      |
-|  5  | n       | Neith  | WEAVE     |
-|  6  | r       | Ra     | ILLUMINE  |
-|  7  | a       | Atum   | SOURCE    |
-|  8  | h       | Horus  | SIGHT     |
-|  9  | m       | Min    | GENERATE  |
-| 10  | w       | Wadjet | PROTECT   |
-| 11  | b       | Bast   | REFINE    |
-| 12  | k       | Khonsu | CYCLE     |
-| 13  | g       | Geb    | GROUND    |
-| 14  | d       | Duat   | TRANSFORM |
-| 15  | f       | -      | BREATHE   |
-| 16  | sh      | Shu    | LIFT      |
-
-Egyptian has more phonemic distinctions (emphatics, pharyngeals, etc.)
-which we collapse to these 16 positions for semantic analysis.
+Wheel Order (for trajectory analysis):
+| Pos | Phoneme | Deity   | Core Verb  |
+|-----|---------|---------|------------|
+|  1  | p       | Ptah    | FORM       |
+|  2  | t       | Thoth   | MEASURE    |
+|  3  | kh      | Khnum   | MOLD       |
+|  4  | s       | Serpent | BIND       |
+|  5  | n       | Neith   | WEAVE      |
+|  6  | r       | Ra      | ILLUMINE   |
+|  7  | a       | Atum    | SOURCE     |
+|  8  | h       | Horus   | SEE        |
+|  9  | m       | Ma'at   | WEIGH      |
+| 10  | w       | Wadjet  | PROTECT    |
+| 11  | b       | Ba      | BIRTH      |
+| 12  | k       | Khonsu  | CYCLE      |
+| 13  | g       | Geb     | GROUND     |
+| 14  | d       | Duat    | DO         |
+| 15  | f       | —       | BREATHE    |
+| 16  | sh      | Shu     | LIFT       |
 """
 
 import re
@@ -35,28 +35,28 @@ WHEEL_16 = ['p', 't', 'kh', 's', 'n', 'r', 'a', 'h', 'm', 'w', 'b', 'k', 'g', 'd
 # Phoneme to wheel position (0-indexed)
 WHEEL_INDEX = {p: i for i, p in enumerate(WHEEL_16)}
 
-# Wheel verb meanings
+# Core verbs (masculine equilibrium) - maintained for backward compatibility
+# For full hourglass semantics, use engine.py
 WHEEL_VERBS = {
     'p':  'FORM',       # Ptah - shaping from void
     't':  'MEASURE',    # Thoth - marking, counting
     'kh': 'MOLD',       # Khnum - shaping on wheel
-    's':  'BIND',       # Sokar - binding, containing
-    'n':  'WEAVE',      # Neith - interlacing threads
+    's':  'BIND',       # Serpent/Set - binding, containing
+    'n':  'WEAVE',      # Neith - interlacing threads (= equilibrium itself)
     'r':  'ILLUMINE',   # Ra - making visible
     'a':  'SOURCE',     # Atum - origin point
-    'h':  'SIGHT',      # Horus - perceiving
-    'm':  'GENERATE',   # Min - producing, engendering
+    'h':  'SEE',        # Horus - perceiving
+    'm':  'WEIGH',      # Ma'at - scales, equanimity
     'w':  'PROTECT',    # Wadjet - shielding
-    'b':  'REFINE',     # Bast - distilling essence
+    'b':  'BIRTH',      # Ba - emerging
     'k':  'CYCLE',      # Khonsu - returning, revolving
     'g':  'GROUND',     # Geb - supporting, underlying
-    'd':  'TRANSFORM',  # Duat - passing through
-    'f':  'BREATHE',    # - - animating, vitalizing
+    'd':  'DO',         # Duat - acting, transforming
+    'f':  'BREATHE',    # — - animating, vitalizing
     'sh': 'LIFT',       # Shu - raising, separating
 }
 
 # Leiden Unified Transliteration → Wheel mapping
-# Collapsing Egyptian phonemic distinctions to 16 positions
 LEIDEN_TO_WHEEL = {
     # Labials
     'p': 'p',
@@ -95,6 +95,16 @@ LEIDEN_TO_WHEEL = {
     'y': 'a',      # y → a
     'l': 'r',      # l → r (late Egyptian loan)
     'u': 'w',      # u → w
+}
+
+# Vowel markers for mode detection (used by engine.py)
+VOWEL_MARKERS = {
+    'a': 'masc',   # "ah" → masculine
+    'e': 'fem',    # "ey/ay" → feminine (aleph quality)
+    'i': 'fem',    # → feminine
+    'o': 'masc',   # stress → masculine intensity
+    'u': 'masc',   # stress → masculine intensity
+    'y': 'fem',    # → feminine
 }
 
 
@@ -144,7 +154,7 @@ def _convert_word(word: str) -> List[str]:
 
 
 def phonemes_to_verbs(phonemes: List[str]) -> List[str]:
-    """Convert phoneme sequence to verb sequence."""
+    """Convert phoneme sequence to verb sequence (core verbs)."""
     return [WHEEL_VERBS.get(p, f'?{p}') for p in phonemes]
 
 
